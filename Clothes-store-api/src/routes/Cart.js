@@ -23,12 +23,11 @@ router.get("/api/cart", auth.verifyToken, async (req, res) => {
 // ADD TO CART
 router.post("/api/add_to_cart", auth.verifyToken, async (req, res) => {
   const owner = req.user._id;
-  const { productId, quantity } = req.body;
+  const { productId, quantity, size, color } = req.body;
 
   try {
     const cart = await Cart.findOne({ owner });
     const product = await Product.findOne({ _id: productId });
-    console.log(cart);
 
     if (!product) {
       res.status(404).send({ message: "product not found!!! " });
@@ -50,7 +49,15 @@ router.post("/api/add_to_cart", auth.verifyToken, async (req, res) => {
         await cart.save();
         res.status(200).send(cart);
       } else {
-        cart.products.push({ productId, productName, quantity, price });
+        cart.products.push({
+          productId,
+          productName,
+          quantity,
+          price,
+          color,
+          size,
+          image: product.listImg[0],
+        });
         cart.bill = cart.products.reduce((acc, curr) => {
           return acc + curr.quantity * curr.price;
         }, 0);
@@ -60,7 +67,17 @@ router.post("/api/add_to_cart", auth.verifyToken, async (req, res) => {
     } else {
       const newCart = await Cart.create({
         owner,
-        products: [{ productId, productName, quantity, price }],
+        products: [
+          {
+            productId,
+            productName,
+            quantity,
+            price,
+            color,
+            size,
+            image: product.listImg[0],
+          },
+        ],
         bill: quantity * price,
       });
       return res.status(201).send(newCart);
@@ -91,7 +108,7 @@ router.delete("/api/remove/:id", auth.verifyToken, async (req, res) => {
         return acc + curr.quantity * curr.price;
       }, 0);
       await cart.save();
-      res.status(200).send({ message: "Xóa thành công!!!" });
+      res.status(200).send({ message: "Xóa thành công!!!", cart });
     } else {
       res.status(404).send("product not found!!!");
     }
@@ -103,7 +120,7 @@ router.delete("/api/remove/:id", auth.verifyToken, async (req, res) => {
 // UPDATE CART
 router.patch("/api/cart/update", auth.verifyToken, async (req, res) => {
   const owner = req.user._id;
-  const { productId, quantity, type } = req.body;
+  const { productId, type } = req.body;
   try {
     let cart = await Cart.findOne({ owner });
     const productIndex = cart.products.findIndex(

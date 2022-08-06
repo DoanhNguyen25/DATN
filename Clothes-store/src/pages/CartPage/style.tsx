@@ -82,7 +82,7 @@ export const ProductName = styled.span``;
 
 export const ProductId = styled.span``;
 
-export const ProductColor = styled.div`
+export const ProductColor = styled.div<{ color?: String }>`
   width: 20px;
   height: 20px;
   border-radius: 50%;

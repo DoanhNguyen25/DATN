@@ -23,7 +23,7 @@ router.post(
 // paggination
 // sort
 // search
-router.get("/api/products", auth.verifyToken, async (req, res) => {
+router.get("/api/products", async (req, res) => {
   const total = await Product.countDocuments({});
 
   try {
@@ -51,7 +51,7 @@ router.patch("/api/product/:id", auth.verifyToken, async (req, res) => {
   const allowedUpdates = [
     "title",
     "desc",
-    "img",
+    "listImg",
     "categories",
     "size",
     "color",

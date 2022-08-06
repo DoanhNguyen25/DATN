@@ -4,17 +4,18 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import { Link } from "react-router-dom";
+
 const Product = ({ item }: any) => {
   return (
     <ProductWrapper>
       <Circle />
-      <img src={item.img} alt="hello ae" />
+      <img src={item.listImg[0]} alt="hello ae" />
       <Info>
         <Icon>
           <ShoppingCartIcon />
         </Icon>
         <Icon>
-          <Link to={`/product/${item.id}`}>
+          <Link to={`/product/${item._id}`}>
             <SearchOutlinedIcon />
           </Link>
         </Icon>

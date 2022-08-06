@@ -1,6 +1,6 @@
 import Badge from "@mui/material/Badge";
 import { Search } from "@material-ui/icons";
-import React, { Dispatch, useState } from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Container from "../common/Container";
 import {
@@ -18,10 +18,10 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { State } from "../../redux/reducers";
 import { logout } from "../../redux/action/useAction";
-
 const Header = () => {
   const [isOpen, setIsOpen] = useState<Boolean>(false);
   const userInfo = useSelector((state: State) => state.userReducer.userInfo);
+  const cart = useSelector((state: State) => state.cartReducer.productInCart);
   const isLoggedIn = !!userInfo._id;
   const dispatch: Dispatch<any> = useDispatch();
   const navigate = useNavigate();
@@ -34,6 +34,8 @@ const Header = () => {
     localStorage.removeItem("access");
     navigate("/login");
   };
+
+
 
   return (
     <HeaderWrapper>
@@ -95,7 +97,7 @@ const Header = () => {
           </MenuItem>
 
           <MenuItem>
-            <Badge badgeContent={4} color="primary">
+            <Badge badgeContent={cart ? cart.length : 0} color="primary">
               <Link to={"/cart"}>
                 <ShoppingCartIcon color="action" />
               </Link>
