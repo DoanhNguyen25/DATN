@@ -20,30 +20,30 @@ import { toast } from "react-toastify";
 
 export const addToCart =
   (productId: string, color: string, size: string, quantity: number) =>
-  async (dispatch: Dispatch<CartAction>) => {
-    try {
-      dispatch({
-        type: ADD_CART__REQUEST,
-      });
-      const req = await AddToCart("http://localhost:8000/api/add_to_cart", {
-        productId: productId,
-        color: color,
-        size: size,
-        quantity: quantity,
-      });
-
-      if (req.data) {
+    async (dispatch: Dispatch<CartAction>) => {
+      try {
         dispatch({
-          type: ADD_CART_SUCCESS,
-          payload: req.data.products,
+          type: ADD_CART__REQUEST,
+        });
+        const req = await AddToCart("http://localhost:8000/api/add_to_cart", {
+          productId: productId,
+          color: color,
+          size: size,
+          quantity: quantity,
+        });
+
+        if (req.data) {
+          dispatch({
+            type: ADD_CART_SUCCESS,
+            payload: req.data.products,
+          });
+        }
+      } catch (error) {
+        dispatch({
+          type: ADD_CART_FAIL,
         });
       }
-    } catch (error) {
-      dispatch({
-        type: ADD_CART_FAIL,
-      });
-    }
-  };
+    };
 
 export const getCart = () => async (dispath: Dispatch<CartAction>) => {
   try {
@@ -61,22 +61,22 @@ export const getCart = () => async (dispath: Dispatch<CartAction>) => {
 
 export const updateCart =
   (productId: string, type: string) =>
-  async (dispatch: Dispatch<CartAction>) => {
-    try {
-      const req = await UpdateCart("http://localhost:8000/api/cart/update", {
-        productId: productId,
-        type: type,
-      });
-      if (req.data) {
-        dispatch({
-          type: UPDATE_CART,
-          payload: req.data.cart.products,
+    async (dispatch: Dispatch<CartAction>) => {
+      try {
+        const req = await UpdateCart("http://localhost:8000/api/cart/update", {
+          productId: productId,
+          type: type,
         });
+        if (req.data) {
+          dispatch({
+            type: UPDATE_CART,
+            payload: req.data.cart.products,
+          });
+        }
+      } catch (error: any) {
+        console.log(error.message);
       }
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  };
+    };
 
 export const deleteItemInCart =
   (productId: string) => async (dispatch: Dispatch<CartAction>) => {

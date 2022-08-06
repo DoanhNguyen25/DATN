@@ -116,7 +116,6 @@ router.delete("/api/remove/:id", auth.verifyToken, async (req, res) => {
         return acc + curr.quantity * curr.price;
       }, 0);
       await cart.save();
-
       res.status(200).send({ message: "Xóa thành công!!!", cart });
     } else {
       res.status(404).send("product not found!!!");
