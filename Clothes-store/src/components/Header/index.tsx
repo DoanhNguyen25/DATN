@@ -1,5 +1,6 @@
 import Badge from "@mui/material/Badge";
 import { Search } from "@material-ui/icons";
+import ClearIcon from "@mui/icons-material/Clear";
 import React, { Dispatch, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Container from "../common/Container";
@@ -19,14 +20,20 @@ import { useSelector, useDispatch } from "react-redux";
 import { State } from "../../redux/reducers";
 import { logout } from "../../redux/action/useAction";
 const Header = () => {
+  const [wordEnter, setWordEnter] = useState<string>("");
   const [isOpen, setIsOpen] = useState<Boolean>(false);
   const userInfo = useSelector((state: State) => state.userReducer.userInfo);
   const cart = useSelector((state: State) => state.cartReducer.productInCart);
   const isLoggedIn = !!userInfo._id;
   const dispatch: Dispatch<any> = useDispatch();
   const navigate = useNavigate();
+
   const toggleUserMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const clearInput = () => {
+    setWordEnter("");
   };
 
   const handleLogout = () => {
@@ -35,7 +42,16 @@ const Header = () => {
     navigate("/login");
   };
 
+  const handleOnkeyPress = (e: any) => {
+    if (e.key === "Enter" && wordEnter !== "") {
+      navigate(`/search?keySearch=${wordEnter}`);
+      setWordEnter("");
+    }
+  };
 
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setWordEnter(e.target.value);
+  };
 
   return (
     <HeaderWrapper>
@@ -73,8 +89,31 @@ const Header = () => {
         <Right>
           <MenuItem>
             <div className="header__container--search">
-              <Input placeholder="Tìm kiếm" />
-              <Search style={{ color: "gray", fontSize: "1.25rem" }} />
+              <Input
+                placeholder="Tìm kiếm"
+                onKeyPress={handleOnkeyPress}
+                value={wordEnter}
+                onChange={handleOnChange}
+              />
+              {wordEnter === "" ? (
+                <Search
+                  style={{
+                    color: "gray",
+                    fontSize: "1.25rem",
+                    cursor: "pointer",
+                  }}
+                />
+              ) : (
+                <span onClick={clearInput}>
+                  <ClearIcon
+                    style={{
+                      color: "gray",
+                      fontSize: "1rem",
+                      cursor: "pointer",
+                    }}
+                  />
+                </span>
+              )}
             </div>
           </MenuItem>
 

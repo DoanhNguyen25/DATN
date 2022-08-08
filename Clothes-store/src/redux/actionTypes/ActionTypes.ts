@@ -19,3 +19,8 @@ export const ADD_CART_FAIL = "ADD_CART_FAIL";
 export const REMOVE_ITEM = "REMOVE_ITEM";
 export const GET_CART_DETAIL = "GET_CART_DETAIL";
 export const UPDATE_CART = "UPDATE_CART";
+
+// comment action
+export const ADD_COMMENT_REQUEST = "ADD_COMMENT_REQUEST";
+export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCESS";
+export const ADD_COMMENT_FAIL = "ADD_COMMET_FAIL";

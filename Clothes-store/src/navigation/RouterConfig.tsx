@@ -1,5 +1,5 @@
 import { useRoutes } from "react-router-dom";
-import { CART, CATEGORY, ORDER, PRODUCTDETAIL, ROOT } from "./CONSTANT";
+import { CART, CATEGORY, ORDER, PRODUCTDETAIL, ROOT, SEARCH } from "./CONSTANT";
 import HomePage from "../pages/HomePage";
 import AuthLayout from "../layouts/AuthLayout";
 import LoginPage from "../pages/LoginPage";
@@ -10,6 +10,7 @@ import Product from "../components/Product";
 import ProductPage from "../pages/ProductPage";
 import CategoryPage from "../pages/CategoryPage";
 import OrderPage from "../pages/OrderPage";
+import SearchPage from "../pages/SearchPage";
 
 const RouterConfig = () => {
   const user = localStorage.getItem("access");
@@ -41,6 +42,10 @@ const RouterConfig = () => {
     {
       path: ORDER,
       element: <OrderPage />,
+    },
+    {
+      path:SEARCH,
+      element:<SearchPage/>
     },
     {
       path: "*",

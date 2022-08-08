@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
 export const NewsletterWrapper = styled.div`
-  height: 60vh;
   background-color: #fcf5f5;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  padding-bottom: 5rem;
 
   p {
     font-size: 24px;
@@ -15,7 +15,7 @@ export const NewsletterWrapper = styled.div`
   }
 
   .input__container {
-    width: 50%;
+    width: 30%;
     height: 40px;
     background-color: white;
     display: flex;
@@ -26,7 +26,7 @@ export const NewsletterWrapper = styled.div`
       border: none;
       flex: 8;
       padding-left: 20px;
-      outline:none;
+      outline: none;
     }
   }
 `;

@@ -45,6 +45,16 @@ router.get("/api/products", async (req, res) => {
   }
 });
 
+// get product by id
+router.get("/api/product/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    res.status(200).send(product);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
+
 // update product
 router.patch("/api/product/:id", auth.verifyToken, async (req, res) => {
   const updates = Object.keys(req.body);

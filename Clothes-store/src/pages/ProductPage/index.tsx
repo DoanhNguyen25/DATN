@@ -1,12 +1,6 @@
 /* eslint-disable react/jsx-no-undef */
 import { Add, Remove } from "@material-ui/icons";
-import React, {
-  Dispatch,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { Dispatch, useCallback, useEffect, useState } from "react";
 import Comment from "../../components/Comment";
 import Newsletter from "../../components/Newsletter";
 import MainLayout from "../../layouts/MainLayout";
@@ -32,12 +26,14 @@ import {
   Title,
   Wrapper,
 } from "./style";
-import { sizeHeight } from "@mui/system";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { addToCart } from "../../redux/action/cartAction";
 import { useDispatch } from "react-redux";
+import axios from "axios";
+import { IProduct } from "../../types/product.types";
 
 const ProductPage = () => {
+  const [product, setProduct] = useState<IProduct>();
   const [quantity, setQuantity] = useState(0);
   const [isOpen, setIsOpen] = useState<Boolean>(false);
   const [color, setColor] = useState("");
@@ -63,16 +59,23 @@ const ProductPage = () => {
   );
 
   const handleDecreaseQuantity = useCallback(() => {
-    if (quantity > 0) {
+    if (quantity > 1) {
       setQuantity((prev) => prev - 1);
     } else {
-      setQuantity(0);
+      setQuantity(1);
     }
   }, [quantity]);
 
   useEffect(() => {
     window.scroll(0, 0);
-  }, []);
+    const getData = async () => {
+      const req = await axios.get(`http://localhost:8000/api/product/${id}`);
+      if (req.data) {
+        setProduct(req.data);
+      }
+    };
+    getData();
+  }, [id]);
 
   const handlecolor = (color: string, index: number) => {
     setColor(color);
@@ -161,7 +164,7 @@ const ProductPage = () => {
         />
       )}
 
-      <Comment />
+      <Comment comment={product && product?.reviews} />
       <Newsletter />
     </MainLayout>
   );

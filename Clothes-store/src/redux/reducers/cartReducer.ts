@@ -1,4 +1,3 @@
-import { Dispatch } from "react";
 import { CartAction, CartState } from "../../types/cart.types";
 import {
   ADD_CART_FAIL,

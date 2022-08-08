@@ -108,7 +108,7 @@ router.delete("/api/remove/user/:id", auth.verifyToken, async (req, res) => {
 });
 
 // api send mail
-router.post("/api/sendmail", auth.verifyToken, async (req, res) => {
+router.post("/api/sendmail", async (req, res) => {
   const { email } = req.body;
 
   await mailTransporter.sendMail(

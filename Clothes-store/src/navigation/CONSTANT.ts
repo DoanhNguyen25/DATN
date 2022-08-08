@@ -6,3 +6,4 @@ export const PRODUCTDETAIL = "/product/:id";
 export const CART = "/cart";
 export const CATEGORY = "/category/:id";
 export const ORDER = "my-order";
+export const SEARCH = "search";
