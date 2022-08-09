@@ -77,7 +77,6 @@ const UserProfile = () => {
 
   const uploadFile = async () => {
     const formData = new FormData();
-    // formData.append("listImage", imageFiles);
     for (let i = 0; i < imageFiles.length; i++) {
       formData.append("listImage", imageFiles[i]);
     }
@@ -100,43 +99,76 @@ const UserProfile = () => {
     // console.log({ username, imgUrl: picture.name });
   };
   return (
-    <div>
-      demo upload
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUserName(e.target.value)}
-        />
+    // <div>
+    //   demo upload
+    //   <form onSubmit={handleSubmit}>
+    //     <input
+    //       type="text"
+    //       value={username}
+    //       onChange={(e) => setUserName(e.target.value)}
+    //     />
 
-        <input
-          type="file"
-          id="listImage"
-          name="listImage"
-          accept="image/png, image/jpeg,image/jpg"
-          onChange={changeHandler}
-          multiple
-        />
-        {images.length > 0 ? (
-          <div style={{ display: "flex" }}>
-            {images.map((image: any, idx: number) => {
-              return (
-                <p key={idx}>
-                  {" "}
-                  <img src={image} alt="" />{" "}
-                </p>
-              );
-            })}
+    //     <input
+    //       type="file"
+    //       id="listImage"
+    //       name="listImage"
+    //       accept="image/png, image/jpeg,image/jpg"
+    //       onChange={changeHandler}
+    //       multiple
+    //     />
+    //     {images.length > 0 ? (
+    //       <div style={{ display: "flex" }}>
+    //         {images.map((image: any, idx: number) => {
+    //           return (
+    //             <p key={idx}>
+    //               {" "}
+    //               <img src={image} alt="" />{" "}
+    //             </p>
+    //           );
+    //         })}
+    //       </div>
+    //     ) : null}
+    //     <button type="submit">Submit</button>
+    //   </form>
+    // </div>
+    <MainLayout>
+      <UserProfileWrapper>
+        <div className="profile__container">
+          <div className="profile--title">Hồ sơ của tôi</div>
+          <div className="profile__detail">
+            <div className="detail__form">
+              <form>
+                <div className="form__group">
+                  <label htmlFor="">Tên Đăng nhập:</label>
+                  <input type={"text"}></input>
+                </div>
+                <div className="form__group">
+                  <label htmlFor="">Họ và Tên:</label>
+                  <input type={"text"}></input>
+                </div>
+                <div className="form__group">
+                  <label htmlFor="">Email:</label>
+                  <input type={"text"}></input>
+                </div>
+                <div className="form__group">
+                  <label htmlFor="">Số điện thoại:</label>
+                  <input type={"text"}></input>
+                </div>
+              </form>
+            </div>
+            <div className="detail__avatar">
+              <div className="detail__avatar--image"></div>
+              <div className="detail__avatar--btn">
+                <button>Chọn ảnh</button>
+              </div>
+              <div className="detail__avatar--desc">
+                Dụng lượng file tối đa 1 MB Định dạng:.JPEG, .PNG
+              </div>
+            </div>
           </div>
-        ) : null}
-        <button type="submit">Submit</button>
-      </form>
-    </div>
-    //   <MainLayout>
-    //     <UserProfileWrapper>
-
-    //     </UserProfileWrapper>
-    //   </MainLayout>
+        </div>
+      </UserProfileWrapper>
+    </MainLayout>
   );
 };
 
