@@ -7,3 +7,4 @@ export const CART = "/cart";
 export const CATEGORY = "/category/:id";
 export const ORDER = "my-order";
 export const SEARCH = "search";
+export const USER_PROFILE = "user-profile";

@@ -55,6 +55,19 @@ router.get("/api/product/:id", async (req, res) => {
   }
 });
 
+// get product by category
+router.get("/api/product2/:categoryId", async (req, res) => {
+  try {
+    const product = await Product.find({ categories: req.params.categoryId });
+    if (!product) {
+      res.status(401).send({ message: "Products not found!!" });
+    }
+    res.status(200).send(product);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
+
 // update product
 router.patch("/api/product/:id", auth.verifyToken, async (req, res) => {
   const updates = Object.keys(req.body);
@@ -137,12 +150,14 @@ router.post("/api/comment/:id", auth.verifyToken, async (req, res) => {
     if (product) {
       const newComment = await Comment.create(review);
       await newComment.save();
+      product.reviews.push(review);
+      await product.save();
+      res
+        .status(200)
+        .send({ message: "comment success!", comment: newComment });
     } else {
       return res.status(404).send({ message: "product not found" });
     }
-    product.reviews.push(review);
-    await product.save();
-    res.status(200).send({ message: "comment success!" });
   } catch (error) {
     res.status(500).send(error.message);
   }

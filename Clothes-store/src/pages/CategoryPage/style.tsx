@@ -1,5 +1,13 @@
 import styled from "styled-components";
 
+export const CategoryPageWrapper = styled.div`
+  .list__product {
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; 
+  }
+`;
 export const Title = styled.h1`
   margin: 20px;
 `;
@@ -10,7 +18,6 @@ export const FilterContainer = styled.div`
 
 export const Filter = styled.div`
   margin: 20px;
-  
 `;
 
 export const FilterText = styled.span`

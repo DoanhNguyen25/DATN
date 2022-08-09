@@ -9,7 +9,7 @@ export interface IProduct {
   _id: String;
   title: String;
   desc: String;
-  listImg: String[];
+  listImg: string[];
   categories: Category;
   color: String;
   price: Number;

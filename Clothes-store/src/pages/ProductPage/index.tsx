@@ -31,10 +31,11 @@ import { addToCart } from "../../redux/action/cartAction";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { IProduct } from "../../types/product.types";
+import { getComment } from "../../redux/action/productAction";
 
 const ProductPage = () => {
   const [product, setProduct] = useState<IProduct>();
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const [isOpen, setIsOpen] = useState<Boolean>(false);
   const [color, setColor] = useState("");
   const [size, setSize] = useState("");
@@ -75,6 +76,8 @@ const ProductPage = () => {
       }
     };
     getData();
+
+    dispatch(getComment());
   }, [id]);
 
   const handlecolor = (color: string, index: number) => {
@@ -95,10 +98,10 @@ const ProductPage = () => {
     <MainLayout>
       <Wrapper>
         <ImgContainer onClick={() => setIsOpen(true)}>
-          <Image src="https://i.ibb.co/S6qMxwr/jean.jpg" />
+          <Image src={product && product?.listImg[0]} />
         </ImgContainer>
         <InfoContainer>
-          <Title>Denim Jumpsuit</Title>
+          <Title>{product?.title}</Title>
           <Desc>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
             venenatis, dolor in finibus malesuada, lectus ipsum porta nunc, at

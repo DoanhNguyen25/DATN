@@ -127,7 +127,9 @@ const Header = () => {
             )}
 
             <div className="user__menu">
-              <div className="user__menu--item">Thông tin tài khoản</div>
+              <div className="user__menu--item">
+                <Link to={"/user-profile"}>Thông tin tài khoản</Link>
+              </div>
               <div className="user__menu--item">Lịch sử đặt hàng</div>
               <div className="user__menu--item" onClick={handleLogout}>
                 Đăng xuất

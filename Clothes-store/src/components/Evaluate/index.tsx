@@ -1,7 +1,7 @@
 import React from "react";
 import { EvaluateWrapper } from "./style";
 import moment from "moment";
-import "moment/locale/vi";
+// import "moment/locale/vi";
 // moment.locale("vi");
 
 const Evaluate = ({ value }: any) => {
@@ -13,7 +13,9 @@ const Evaluate = ({ value }: any) => {
           <span>{value.name}</span>
         </div>
         <div className="evaluate__info--date">
-          {moment(value.createdAt).startOf("hour").fromNow()}
+          {moment.utc(value.createdAt).startOf("hour").fromNow()}
+
+          {/* {new Date(value.createdAt).toDateString()} */}
         </div>
       </div>
       <div className="evaluate__content">

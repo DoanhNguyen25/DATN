@@ -16,12 +16,16 @@ const SearchPage = () => {
 
   useEffect(() => {
     const getProduct = async () => {
-      const req = await GetProductBySearch(
-        `http://localhost:8000/api/products?keySearch=${keySearch}`
-      );
-      if (req.data) {
+      try {
+        const req = await GetProductBySearch(
+          `http://localhost:8000/api/products?keySearch=${keySearch}`
+        );
+        if (req.data) {
+          setIsLoading(false);
+          setMealSearch(req.data.products);
+        }
+      } catch (error) {
         setIsLoading(false);
-        setMealSearch(req.data.products);
       }
     };
     getProduct();

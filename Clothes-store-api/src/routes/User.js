@@ -163,13 +163,34 @@ router.get("/api/stats", auth.verifyTokenAndAuthorization, async (req, res) => {
 // upload img
 router.post(
   "/api/user/upload",
-  upload.array("image", 12),
+  upload.single("image"),
   async (req, res) => {
     try {
       const result = await cloudinary.uploader.upload(req.file.path);
       res.status(200).send({ url: result.secure_url });
     } catch (error) {
       res.send(error);
+    }
+  },
+  (error, req, res, next) => {
+    res.send({ message: error.message });
+  }
+);
+
+// multiple img
+router.post(
+  "/api/upload/multiple",
+  upload.array("listImage", 12),
+  async (req, res) => {
+    try {
+      const listUrl = [];
+      for (let i = 0; i < req.files.length; i++) {
+        let result = await cloudinary.uploader.upload(req.files[i].path);
+        listUrl.push(result.secure_url);
+      }
+      res.status(200).send(listUrl);
+    } catch (error) {
+      res.status(500).send({ message: error.message });
     }
   },
   (error, req, res, next) => {

@@ -3,6 +3,7 @@ import {
   ADD_COMMENT_FAIL,
   ADD_COMMENT_REQUEST,
   ADD_COMMENT_SUCCESS,
+  GET_COMMENT,
 } from "../redux/actionTypes/ActionTypes";
 
 export interface Comment {
@@ -32,7 +33,13 @@ interface AddCommentFail {
   payload: String;
 }
 
+interface GetComment {
+  type: typeof GET_COMMENT;
+  payload: Comment[] | [];
+}
+
 export type CommentAction =
   | AddCommentSuccess
   | AddCommentRequest
-  | AddCommentFail;
+  | AddCommentFail
+  | GetComment;
