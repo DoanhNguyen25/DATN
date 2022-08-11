@@ -1,5 +1,5 @@
 import React, { Dispatch, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -20,13 +20,16 @@ import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const dispatch: Dispatch<any> = useDispatch();
-
   const userInfo = useSelector((state: State) => state.userReducer.userInfo);
   const navigate = useNavigate();
-
+  const {pathname} = useLocation()
   useEffect(() => {
     if (userInfo !== undefined && userInfo._id) {
-      navigate("/");
+      if(pathname === "/login"){
+        navigate("/");
+      }else{
+        navigate(`${pathname}`)
+      }
     }
   }, [userInfo, navigate]);
 

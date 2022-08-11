@@ -161,8 +161,8 @@ router.get("/api/stats", auth.verifyTokenAndAuthorization, async (req, res) => {
 
 // upload img
 router.post(
-  "/api/user/upload",
-  upload.single("image"),
+  "/api/upload/single",
+  upload.single("avatar"),
   async (req, res) => {
     try {
       const result = await cloudinary.uploader.upload(req.file.path);

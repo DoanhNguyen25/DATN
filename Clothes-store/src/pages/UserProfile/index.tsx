@@ -14,31 +14,22 @@ const UserProfile = () => {
   // const [imageFiles, setImageFiles] = useState<any>([]);
   // const [images, setImages] = useState<any>([]);
 
+  // const [avatar, setAvatar] = useState<any>("")
   const [picture, setPicture] = useState<any>(null);
   const [imgData, setImgData] = useState<any>(null);
 
-  //upload single file
-  const onChangePicture = (e: any) => {
-    if (e.target.files[0]) {
-      // console.log("picture: ", e.target.files);
-      setPicture(e.target.files[0]);
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        setImgData(reader.result);
-      });
-      reader.readAsDataURL(e.target.files[0]);
-    }
-  };
 
   const formik = useFormik({
     initialValues: {
-      first_name: "",
-      email: "",
+      fullname: "",
+      username: "",
+      email:"",
+      avatar:"",
       phone: "",
-      address: "",
     },
     validationSchema: Yup.object({
-      first_name: Yup.string()
+      username:Yup.string().required("không được để trống"),
+      fullname: Yup.string()
         .min(2, "Mininum 2 characters")
         .max(15, "Maximum 15 characters")
         .required("không được để trống"),
@@ -46,12 +37,25 @@ const UserProfile = () => {
         .email("Invalid email format")
         .required("không được để trống"),
       phone: Yup.string().required("không được để trống"),
-      address: Yup.string().required("không được để trống"),
     }),
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      console.log(values)
     },
   });
+
+  //upload single file
+  const onChangePicture = (e: any) => {
+    if (e.target.files[0]) {
+      // console.log("picture: ", e.target.files);
+      setPicture(e.target.files[0]);
+      uploadFile()
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        setImgData(reader.result);
+      });
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
 
   // upload multiple file
   // const changeHandler = (e: any) => {
@@ -101,19 +105,19 @@ const UserProfile = () => {
   // }, [imageFiles]);
 
   const uploadFile = async () => {
-    const formData = new FormData();
     // for (let i = 0; i < imageFiles.length; i++) {
     //   formData.append("listImage", imageFiles[i]);
     // }
 
-    formData.append("image", picture);
+    const formData = new FormData();
+    formData.append("avatar", picture);
     formData.append("upload_preset", "xw4yrog1");
     try {
       const req = await axios.post(
-        "http://localhost:8000/api/upload/multiple",
+        "http://localhost:8000/api/upload/single",
         formData
       );
-      console.log(req.data);
+     console.log(req.data)
     } catch (error) {
       toast.error("không thành công");
     }
@@ -164,35 +168,36 @@ const UserProfile = () => {
           <div className="profile--title">Hồ sơ của tôi</div>
           <div className="profile__detail">
             <div className="detail__form">
-              <form>
+              <form onSubmit={formik.handleSubmit}>
                 <div style={{ display: "flex" }}>
                   <div style={{ flex: "2" }}>
                     <div className="form__group">
                       <label htmlFor="">Tên Đăng nhập:</label>
-                      <input type={"text"}></input>
+                      <input type={"text"} name="username" value={formik.values.username} onChange={formik.handleChange}></input>
                     </div>
                     <div className="form__group">
                       <label htmlFor="">Họ và Tên:</label>
-                      <input type={"text"}></input>
+                      <input type={"text"} name="fullname" value={formik.values.fullname} onChange={formik.handleChange}></input>
                     </div>
                     <div className="form__group">
                       <label htmlFor="">Email:</label>
-                      <input type={"text"}></input>
+                      <input type={"text"} name="email" value={formik.values.email} onChange={formik.handleChange}></input>
+
                     </div>
                     <div className="form__group">
                       <label htmlFor="">Số điện thoại:</label>
-                      <input type={"text"}></input>
+                      <input type={"text"} name="phone" value={formik.values.phone} onChange={formik.handleChange}></input>
                     </div>
                   </div>
 
                   <div className="detail__avatar">
                     <div className="detail__avatar--image">
-                      <img src={imgData} alt="img" />
+                      <img src={imgData || "https://res.cloudinary.com/dchzdgm6r/image/upload/v1660201417/kbdauuynndodajkh1wp3.jpg"} alt="img" />
                     </div>
                     <div className="detail__avatar--btn">
                       <input
                         type="file"
-                        name="image"
+                        name="avatar"
                         className="custom-file-input"
                         onChange={onChangePicture}
                       />
@@ -203,8 +208,7 @@ const UserProfile = () => {
                     </div>
                   </div>
                 </div>
-
-                <button>Lưu</button>
+                <button type="submit">Lưu</button>
               </form>
             </div>
           </div>
