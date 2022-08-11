@@ -4,7 +4,11 @@ export const UserProfileWrapper = styled.div`
   width: 100%;
   background: #f5f5f5;
   padding-top: 2rem;
+<<<<<<< HEAD
   padding-bottom: 2rem;
+=======
+  padding-bottom:2rem;
+>>>>>>> 15da317 (user profile)
   font-family: "Roboto Mono", monospace;
 
   .profile__container {
@@ -24,7 +28,11 @@ export const UserProfileWrapper = styled.div`
     .profile__detail {
       display: flex;
       justify-content: space-around;
+<<<<<<< HEAD
       padding-top: 2.5rem;
+=======
+      padding-top:2.5rem;
+>>>>>>> 15da317 (user profile)
 
       .detail__form {
         flex: 3;
@@ -35,11 +43,16 @@ export const UserProfileWrapper = styled.div`
           flex: 3;
           height: 10rem;
           position: absolute;
+<<<<<<< HEAD
           right: 34%;  
+=======
+          right: 0;
+>>>>>>> 15da317 (user profile)
           top: 0;
           border-right: 1px solid #cececef5;
         }
 
+<<<<<<< HEAD
         .form__group {
           display: flex;
           padding: 0 2rem;
@@ -65,22 +78,59 @@ export const UserProfileWrapper = styled.div`
       }
       .detail__avatar {
         flex: 1 ;
+=======
+        .form__group{
+          display:flex;
+          padding:0 2rem;
+          margin-bottom: 2rem;
+
+          label{
+            flex:1;
+          }
+          input{
+            flex:2;
+            padding:0.5rem 1rem;
+          }
+        }
+
+        button{
+          padding:0.75rem 1.5rem;
+          border:none;
+          outline:none;
+          background-color: teal;
+          color:#fff;
+          transform:translateX(11.75rem)
+        }
+      }
+      .detail__avatar {
+        flex: 2;
+>>>>>>> 15da317 (user profile)
         display: flex;
         flex-direction: column;
         align-items: center;
         font-family: "Roboto Mono", monospace;
         text-align: center;
+<<<<<<< HEAD
         &--image {
           width: 6.25rem;
           height: 6.25rem;
           margin-bottom: 1rem;
           img {
             width: 100%;
+=======
+        &--image{
+          width:6.25rem;
+          height: 6.25rem;
+          margin-bottom: 1rem;
+          img{
+            width:100%;
+>>>>>>> 15da317 (user profile)
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
           }
         }
+<<<<<<< HEAD
         &--btn {
           .custom-file-input {
             color: transparent;
@@ -112,6 +162,15 @@ export const UserProfileWrapper = styled.div`
           }
           .custom-file-input:active::before {
             background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+=======
+        &--btn{
+          button{
+          padding:0.5rem 1rem;
+          border:2px solid teal;
+          outline:none;
+          background-color:transparent;
+          color: gray;
+>>>>>>> 15da317 (user profile)
           }
         }
       }
