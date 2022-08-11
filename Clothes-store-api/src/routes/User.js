@@ -33,7 +33,6 @@ router.post("/api/user/create", upload.single("image"), async (req, res) => {
 // api get list user
 router.get("/api/users", async (req, res) => {
   try {
-    console.log(req.user);
     const user = await User.find({});
     res.status(200).send(user);
   } catch (error) {}

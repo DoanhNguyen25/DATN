@@ -3,6 +3,7 @@ import {
   CART,
   CATEGORY,
   ORDER,
+  ORDER_HISTORY,
   PRODUCTDETAIL,
   ROOT,
   SEARCH,
@@ -20,6 +21,7 @@ import CategoryPage from "../pages/CategoryPage";
 import OrderPage from "../pages/OrderPage";
 import SearchPage from "../pages/SearchPage";
 import UserProfile from "../pages/UserProfile";
+import OrderHistory from "../pages/OrderHistory";
 
 const RouterConfig = () => {
   const user = localStorage.getItem("access");
@@ -51,6 +53,10 @@ const RouterConfig = () => {
     {
       path: ORDER,
       element: <OrderPage />,
+    },
+    {
+      path: ORDER_HISTORY,
+      element: <OrderHistory />,
     },
     {
       path: SEARCH,
