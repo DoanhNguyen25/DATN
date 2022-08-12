@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const OrderPageWrapper = styled.div`
-.order__main{
   box-sizing: border-box;
   width: 100%;
   overflow-x: hidden;
@@ -30,7 +29,7 @@ export const OrderPageWrapper = styled.div`
           margin-right: 2rem;
         }
         &--input {
-          margin-top: .4rem;
+          margin-top: 0.4rem;
           width: 100%;
           input {
             width: 100%;
@@ -41,45 +40,85 @@ export const OrderPageWrapper = styled.div`
           }
         }
       }
-      .btn-order{
-        margin: 3rem 0 2rem;
-        button{
-          width: 20rem;
-          padding: 1rem 0.5rem;
-          text-align: center;
-          background-color: teal;
-          border-radius: 3px;
-          border: none;
-          cursor: pointer;
-          color: #fff;
-          &:active{
-            opacity: 0.8;
-          } 
-        }
-      }
     }
 
     .order__info {
       flex: 1;
-      .order__info--product{
+
+      &--products {
         width: 100%;
+        min-height: 6rem;
+        height: 28rem;
+        overflow: auto;
+        padding-right: 0.5rem;
+
+        &::-webkit-scrollbar-track {
+          /* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); */
+          border-radius: 10px;
+          background-color: #f5f5f5;
+        }
+        &::-webkit-scrollbar {
+          width: 12px;
+          border-radius: 10px;
+          background-color: #f5f5f5;
+        }
+        &::-webkit-scrollbar-thumb {
+          border-radius: 10px;
+          -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+          background-color: teal;
+        }
       }
-      .order__info--total{
+
+      &--payment {
+        width: 100%;
+        margin-top: 1rem;
+        /* height: 3rem; */
+        background: #09b0b026;
+        /* padding: 0.5rem 1rem; */
+
+        .btn-order {
+          margin: 1rem 0 2rem;
+          button {
+            width: 100%;
+            padding: 1rem 0.5rem;
+            text-align: center;
+            background-color: teal;
+            border-radius: 3px;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            &:active {
+              opacity: 0.8;
+            }
+          }
+        }
+
+        .pricing {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          span {
+            flex: 1;
+          }
+        }
+      }
+      .order__info--total {
         margin: 3rem 0;
-        .order--price{
+        .order--price {
           display: flex;
           justify-content: space-between;
           align-items: center;
           color: #999;
           padding-top: 1rem;
-          &:nth-child(2){
+          &:nth-child(2) {
             padding-bottom: 1rem;
             border-bottom: 1px solid #ccc;
           }
-          &:last-child{
+          &:last-child {
             padding-top: 1.5rem;
-            span{
-              &:last-child{
+            span {
+              &:last-child {
                 color: #000;
                 font-weight: 500;
               }
@@ -89,7 +128,6 @@ export const OrderPageWrapper = styled.div`
       }
     }
   }
-}
 `;
 
 export const CartItemWrapper = styled.div`
@@ -99,38 +137,38 @@ export const CartItemWrapper = styled.div`
   align-items: center;
   padding-bottom: 1rem;
   border-bottom: 1px solid #ccc;
-  & ~ &{
-        margin-top: 1rem;
-      }
-  .order--product__image{
+  & ~ & {
+    margin-top: 1rem;
+  }
+  .order--product__image {
     width: 5rem;
     height: 5rem;
-    border-radius: .3rem;
+    border-radius: 0.3rem;
     margin-right: 2rem;
-    img{
+    img {
       width: 100%;
       height: 100%;
-      border-radius: .3rem;
+      border-radius: 0.3rem;
     }
   }
-  .order--product__content{
+  .order--product__content {
     width: calc(100% - 7rem);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .product__content--left{
+    .product__content--left {
       width: 100%;
       padding-right: 1rem;
-      .product__name{
+      .product__name {
         font-size: 1.125rem;
       }
-      .product__color{
+      .product__color {
         color: #ccc;
         font-size: 1rem;
       }
     }
-    .product__content--right{
-      span{
+    .product__content--right {
+      span {
         font-size: 1rem;
       }
     }

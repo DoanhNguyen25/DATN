@@ -4,17 +4,29 @@ import { OrderPageWrapper } from "./style";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import StripePayment from "../../components/Payment";
+import CardItemOrder from "./CardItemOrder";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 
 const OrderPage = () => {
+  const [value, setValue] = React.useState("0");
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
+  };
+
   const formik = useFormik({
     initialValues: {
-      first_name: "",
+      fullname: "",
       email: "",
       phone: "",
       address: "",
     },
     validationSchema: Yup.object({
-      first_name: Yup.string()
+      fullname: Yup.string()
         .min(2, "Mininum 2 characters")
         .max(15, "Maximum 15 characters")
         .required("không được để trống"),
@@ -32,7 +44,6 @@ const OrderPage = () => {
     <MainLayout>
       <OrderPageWrapper>
         <h1 style={{ textAlign: "center" }}>Đặt hàng</h1>
-
         <div className="order__container">
           <div className="order__form">
             <form onSubmit={formik.handleSubmit}>
@@ -41,13 +52,12 @@ const OrderPage = () => {
                 <div className="form__group--input">
                   <input
                     type="text"
-                    name="first_name"
-                     
+                    name="fullname"
+                    value={formik.values.fullname}
+                    onChange={formik.handleChange}
                   />
-                  {formik.errors.first_name && formik.touched.first_name && (
-                    <span className="msg__error">
-                      {formik.errors.first_name}
-                    </span>
+                  {formik.errors.fullname && formik.touched.fullname && (
+                    <span className="msg__error">{formik.errors.fullname}</span>
                   )}
                 </div>
               </div>
@@ -93,13 +103,61 @@ const OrderPage = () => {
                   )}
                 </div>
               </div>
-              <div>
-                <button type="submit">Đặt hàng</button>
-              </div>
             </form>
             <StripePayment />
           </div>
-          <div className="order__info"></div>
+          <div className="order__info">
+            <div className="order__info--products">
+              <CardItemOrder />
+              <CardItemOrder />
+              <CardItemOrder />
+              <CardItemOrder />
+              <CardItemOrder />
+            </div>
+
+            <div className="order__info--payment">
+              <div style={{ padding: "0.5rem 2rem" }}>
+                <div className="pricing">
+                  <span style={{ fontSize: "2rem" }}>Tổng:</span>
+                  <span style={{ textAlign: "right", fontSize: "1.5rem" }}>
+                    120000$
+                  </span>
+                </div>
+
+                <FormControl>
+                  <RadioGroup
+                    aria-labelledby="demo-controlled-radio-buttons-group"
+                    name="controlled-radio-buttons-group"
+                    value={value}
+                    onChange={handleChange}
+                    style={{ flexDirection: "row" }}
+                  >
+                    <FormControlLabel
+                      value="0"
+                      control={<Radio />}
+                      label="Thanh toán khi nhận hàng"
+                    />
+                    <FormControlLabel
+                      value="1"
+                      control={<Radio />}
+                      label="Thanh Toán qua Stripe"
+                    />
+                  </RadioGroup>
+                </FormControl>
+
+                <div className="btn-order">
+                  <button
+                    type="submit"
+                    onClick={() => {
+                      formik.submitForm();
+                    }}
+                  >
+                    Đặt hàng
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </OrderPageWrapper>
     </MainLayout>
