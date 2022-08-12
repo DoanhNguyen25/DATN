@@ -1,34 +1,33 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { UploadFile } from "../../api/UserApi";
+import { EditUser, GetUserInfo, UploadFile } from "../../api/UserApi";
 import MainLayout from "../../layouts/MainLayout";
 import { UserProfileWrapper } from "./style";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { UserInfo } from "../../types/user.types";
 
 const imageTypeRegex = /image\/(png|jpg|jpeg)/gm;
 
 const UserProfile = () => {
-  const [username, setUserName] = useState("");
   // const [imageFiles, setImageFiles] = useState<any>([]);
   // const [images, setImages] = useState<any>([]);
 
-  // const [avatar, setAvatar] = useState<any>("")
+  const [userInfo, setUserInfo] = useState<UserInfo>();
   const [picture, setPicture] = useState<any>(null);
   const [imgData, setImgData] = useState<any>(null);
 
-
   const formik = useFormik({
     initialValues: {
-      fullname: "",
+      fullname: "hello",
       username: "",
-      email:"",
-      avatar:"",
+      email: "",
+      avatar: "",
       phone: "",
     },
     validationSchema: Yup.object({
-      username:Yup.string().required("không được để trống"),
+      username: Yup.string().required("không được để trống"),
       fullname: Yup.string()
         .min(2, "Mininum 2 characters")
         .max(15, "Maximum 15 characters")
@@ -36,19 +35,41 @@ const UserProfile = () => {
       email: Yup.string()
         .email("Invalid email format")
         .required("không được để trống"),
+      avatar: Yup.string(),
       phone: Yup.string().required("không được để trống"),
     }),
     onSubmit: (values) => {
       console.log(values)
+      editUser(values);
     },
   });
 
+  useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        const req = await GetUserInfo("http://localhost:8000/api/user-profile");
+        if (req.data) {
+          formik.setValues({
+            fullname: req.data.fullname,
+            username: req.data.username,
+            avatar: req.data.avatar,
+            email: req.data.email,
+            phone: req.data.phone,
+          });
+          setUserInfo(req.data);
+          setImgData(req.data.avatar);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUserInfo();
+  }, []);
+
   //upload single file
-  const onChangePicture = (e: any) => {
+  const onChangePicture = async (e: any) => {
     if (e.target.files[0]) {
-      // console.log("picture: ", e.target.files);
       setPicture(e.target.files[0]);
-      uploadFile()
       const reader = new FileReader();
       reader.addEventListener("load", () => {
         setImgData(reader.result);
@@ -104,6 +125,28 @@ const UserProfile = () => {
   //   };
   // }, [imageFiles]);
 
+  useEffect(() => {
+    if (picture) {
+      uploadFile();
+    } else {
+      formik.setFieldValue("avatar", "");
+    }
+  }, [picture]);
+
+  const editUser = async (data: any) => {
+    try {
+      const req = await EditUser(
+        `http://localhost:8000/api/user/${userInfo?._id}`,
+        data
+      );
+      if (req.data) {
+        toast.success("sửa thành công!!!");
+      }
+    } catch (error) {
+      toast.error("sửa thất bại!!!");
+    }
+  };
+
   const uploadFile = async () => {
     // for (let i = 0; i < imageFiles.length; i++) {
     //   formData.append("listImage", imageFiles[i]);
@@ -117,18 +160,20 @@ const UserProfile = () => {
         "http://localhost:8000/api/upload/single",
         formData
       );
-     console.log(req.data)
+      if (req.data) {
+        formik.values.avatar = req.data.url;
+      }
     } catch (error) {
       toast.error("không thành công");
     }
   };
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    uploadFile();
-    // console.log(imageFiles);
-    // console.log({ username, imgUrl: picture.name });
-  };
+  // const handleSubmit = (e: any) => {
+  //   e.preventDefault();
+  //   uploadFile();
+  //   // console.log(imageFiles);
+  //   // console.log({ username, imgUrl: picture.name });
+  // };
   return (
     // <div>
     //   demo upload
@@ -173,26 +218,52 @@ const UserProfile = () => {
                   <div style={{ flex: "2" }}>
                     <div className="form__group">
                       <label htmlFor="">Tên Đăng nhập:</label>
-                      <input type={"text"} name="username" value={formik.values.username} onChange={formik.handleChange}></input>
+                      <input
+                        type={"text"}
+                        name="username"
+                        value={formik.values.username}
+                        onChange={formik.handleChange}
+                        disabled={true}
+                      ></input>
                     </div>
                     <div className="form__group">
                       <label htmlFor="">Họ và Tên:</label>
-                      <input type={"text"} name="fullname" value={formik.values.fullname} onChange={formik.handleChange}></input>
+                      <input
+                        type={"text"}
+                        name="fullname"
+                        value={formik.values.fullname}
+                        onChange={formik.handleChange}
+                      ></input>
                     </div>
                     <div className="form__group">
                       <label htmlFor="">Email:</label>
-                      <input type={"text"} name="email" value={formik.values.email} onChange={formik.handleChange}></input>
-
+                      <input
+                        type={"text"}
+                        name="email"
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                      ></input>
                     </div>
                     <div className="form__group">
                       <label htmlFor="">Số điện thoại:</label>
-                      <input type={"text"} name="phone" value={formik.values.phone} onChange={formik.handleChange}></input>
+                      <input
+                        type={"text"}
+                        name="phone"
+                        value={formik.values.phone}
+                        onChange={formik.handleChange}
+                      ></input>
                     </div>
                   </div>
 
                   <div className="detail__avatar">
                     <div className="detail__avatar--image">
-                      <img src={imgData || "https://res.cloudinary.com/dchzdgm6r/image/upload/v1660201417/kbdauuynndodajkh1wp3.jpg"} alt="img" />
+                      <img
+                        src={
+                          imgData ||
+                          "https://res.cloudinary.com/dchzdgm6r/image/upload/v1660201417/kbdauuynndodajkh1wp3.jpg"
+                        }
+                        alt="img"
+                      />
                     </div>
                     <div className="detail__avatar--btn">
                       <input

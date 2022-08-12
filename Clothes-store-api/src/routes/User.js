@@ -38,6 +38,19 @@ router.get("/api/users", async (req, res) => {
   } catch (error) {}
 });
 
+// api get user info
+router.get("/api/user-profile", auth.verifyToken, async (req, res) => {
+  try {
+    const userProfile = await User.findOne({ _id: req.user._id });
+    if (!userProfile) {
+      return res.status(404).send({ message: "not found!!" });
+    }
+    return res.status(200).send(userProfile);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
+
 // api get user by Id
 router.get("/api/user/:id", auth.verifyToken, async (req, res) => {
   try {
@@ -53,14 +66,16 @@ router.get("/api/user/:id", auth.verifyToken, async (req, res) => {
 });
 
 // api edit user
-router.patch("/api/user/:id", upload.single("image"), async (req, res) => {
+router.patch("/api/user/:id", auth.verifyToken, async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ["username", "email", "password", "isAdmin", "image"];
-  let urlImg;
-  if (req.file) {
-    urlImg = await cloudinary.uploader.upload(req.file.path);
-  }
-
+  const allowedUpdates = [
+    "username",
+    "email",
+    "fullname",
+    "isAdmin",
+    "avatar",
+    "phone",
+  ];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
   );
@@ -77,12 +92,12 @@ router.patch("/api/user/:id", upload.single("image"), async (req, res) => {
 
     const data = {
       username: req.body.username || user.username,
-      password: req.body.password || user.password,
+      fullname: req.body.fullname || user.fullname,
       email: req.body.email || user.email,
       isAdmin: req.body.isAdmin || user.isAdmin,
-      avatar: req.file ? urlImg?.secure_url : user.avatar,
+      avatar: req.body.avatar || user.avatar,
+      phone: req.body.phone || user.phone,
     };
-
     await User.findByIdAndUpdate({ _id: req.params.id }, data, { new: true });
     res.send(data);
   } catch (e) {

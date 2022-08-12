@@ -10,11 +10,11 @@ import {
 
 export interface UserInfo {
   _id: String;
-  fullname: String;
-  username: String;
-  email: String;
-  phone: String;
-  avatar: String;
+  fullname: string;
+  username: string;
+  email: string;
+  phone: string;
+  avatar: string;
   isAdmin: boolean;
   isActive: boolean;
   access_token: String;
