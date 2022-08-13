@@ -10,7 +10,7 @@ import SignIn from "./pages/SignIn";
 import Main from "./components/layout/Main";
 import Users from "./pages/Users";
 
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
 import Category from "./pages/Category";

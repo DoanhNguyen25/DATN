@@ -78,18 +78,16 @@ function News() {
   const [addNews, setAddNews] = useState(false)
   const [editorLoaded, setEditorLoaded] = useState(false);
   const fetchData = async () => {
-    const response = await axios.get(`${API_URL}/product/list`)
-    const res = await axios.get(`${API_URL}/category/all`)
+    const response = await axios.get(`${API_URL}/products?size=10`)
+    const res = await axios.get(`${API_URL}/categories`)
     if (response && response.data) {
-      setDataUser(response.data.data.data)
-      setDataSearch(response.data.data.data)
+      setDataUser(response.data.products)
+      setDataSearch(response.data.products)
       setIsLoading(false)
       setSuccess(false)
-      // console.log(dataUserRef.current)
     }
     if (res && res.data) {
-      setCategory(res.data.data.data)
-      // console.log(categoryRef.current)
+      setCategory(res.data)
     }
   }
 
@@ -116,19 +114,19 @@ function News() {
 
     {
       title: "Tên sản phẩm",
-      key: "Name",
+      key: "title",
       width: 220,
       fixed: 'left',
-      sorter: (a, b) => a.Name.length - b.Name.length,
+      sorter: (a, b) => a.title.length - b.title.length,
       ellipsis: {
         showTitle: false,
       },
       render(record) {
         return (
           <>
-            {record.Image ?
-              (<><img src={url + record.Image[0]} alt='not' width={30} height={35} title={record.Name} />&emsp;{record.Name}</>)
-              : (<><img src={url + 'empty.png'} alt='not' width={30} height={35} title={record.Name} />&emsp;{record.Name}</>)
+            {record.listImg ?
+              (<><img src={record.listImg[0]} alt='not' width={30} height={35} title={record.title} />&emsp;{record.title}</>)
+              : (<><img src={url + 'empty.png'} alt='not' width={30} height={35} title={record.title} />&emsp;{record.title}</>)
             }
           </>
         );
@@ -136,8 +134,8 @@ function News() {
     },
     {
       title: "Mô tả",
-      key: "Description",
-      dataIndex: 'Description',
+      key: "desc",
+      dataIndex: 'desc',
       width: 400,
       ellipsis: {
         showTitle: false,
@@ -147,11 +145,11 @@ function News() {
       title: "Giá ban đầu",
       key: "Price",
       width: 120,
-      sorter: (a, b) => a.Price - b.Price,
+      sorter: (a, b) => a.price - b.price,
       render(record) {
         return (
           <>
-            {Format(record.Price)}
+            {Format(record.price)}
           </>
         );
       }
@@ -160,56 +158,29 @@ function News() {
       title: "Giá bán",
       key: "SalePrice",
       width: 100,
-      sorter: (a, b) => a.SalePrice - b.SalePrice,
+      sorter: (a, b) => a.price - b.price,
       render(record) {
         return (
           <>
-            {Format(record.SalePrice)}
+            {Format(record.price)}
           </>
         );
       }
     },
     {
       title: "Danh mục",
-      key: "Category",
+      key: "categories",
       width: 120,
-      filters: [
-        {
-          text: 'Áo',
-          value: '1',
-        },
-        {
-          text: 'Quần',
-          value: '5',
-        },
-        {
-          text: 'Áo Nam',
-          value: '9',
-        },
-        {
-          text: 'Quần Nam',
-          value: '10',
-        },
-        {
-          text: 'Áo Nữ',
-          value: '11',
-        },
-        {
-          text: 'Quần Nữ',
-          value: '13',
-        },
-      ],
-      onFilter: (value, record) => record.CategoryId.indexOf(value) === 0,
-      sorter: (a, b) => a.CategoryId - b.CategoryId,
+      filters: categoryRef.current.map(item => ({
+        text: item.category_name,
+        value: item._id,
+      })),
+      onFilter: (value, record) => record.categories._id?.indexOf(value) === 0,
+      sorter: (a, b) => a._id - b._id,
       render(record) {
         return (
           <>
-            {categoryRef.current.filter(item => {
-              if (Number(item.Id) === Number(record.CategoryId)) {
-                return item
-              }
-            })[0]?.Name}
-            {/* {record.CategoryId} */}
+            {record.categories.category_name}
           </>
         );
       }
@@ -217,7 +188,6 @@ function News() {
     {
       title: "Trạng thái",
       key: "StatusId",
-      // dataIndex: 'StatusId',
       width: 120,
       filters: [
         {
@@ -235,18 +205,18 @@ function News() {
       ],
       onFilter: (value, record) => {
         if (Number(value) === 6)
-          return (record.Quantity >= 10)
+          return (record.quantityInStock >= 10)
         if (Number(value) === 7)
-          return (record.Quantity <= 10 & record.Quantity > 0)
+          return (record.quantityInStock <= 10 & record.quantityInStock > 0)
         if (Number(value) === 8)
-          return (record.Quantity === 0)
+          return (record.quantityInStock === 0)
 
       },
       render(record) {
         return (
           <>
-            {record.Quantity &&
-              record.Quantity !== 0 ? (record.Quantity > 10 ? 'Còn hàng' : (record.Quantity <= 10 & record.Quantity > 0) && 'Sắp hết hàng') : ('Hết hàng')
+            {record.quantityInStock &&
+              record.quantityInStock !== 0 ? (record.quantityInStock > 10 ? 'Còn hàng' : (record.quantityInStock <= 10 & record.quantityInStock > 0) && 'Sắp hết hàng') : ('Hết hàng')
             }
           </>
         );
@@ -254,23 +224,10 @@ function News() {
     },
     {
       title: "Số lượng",
-      key: "Quantity",
-      dataIndex: "Quantity",
+      key: "quantityInStock",
+      dataIndex: "quantityInStock",
       width: 90,
-      sorter: (a, b) => a.Quantity - b.Quantity,
-    },
-    {
-      title: "Size",
-      key: "Size",
-      width: 130,
-      // dataIndex: "Size",
-      render(record) {
-        return (
-          <div>
-            {record.Size.join(',')}
-          </div>
-        );
-      }
+      sorter: (a, b) => a.quantityInStock - b.quantityInStock,
     },
     {
       title: "Hành động",
@@ -294,7 +251,7 @@ function News() {
 
   const BtnModalUpdate = (record) => {
     setIsEditing(true)
-    setIsDataEdit({ ...record, Image: [] })
+    setIsDataEdit({ ...record, listImg: [] })
 
   }
 
@@ -304,7 +261,11 @@ function News() {
     //   onText: "Yes",
     //   okType: 'danger',
     //   onOk: async () => {
-    await axios.delete(`${API_URL}/product/delete/${record.Id}`)
+    await axios.delete(`${API_URL}/product/${record._id}`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token_admin')}`
+      }
+    })
       .then(() => {
         notification.success({
           message: 'Delete Success!',
@@ -352,9 +313,7 @@ function News() {
         })
         setIsLoading(false)
         setSuccess(true)
-        // setIsDataEdit({})
         setIsEditing(false)
-        // setAddNews(false)
       })
       .catch(err => {
         notification.error({
@@ -364,8 +323,6 @@ function News() {
         })
         setSuccess(false)
       })
-    // setIsEditing(false)
-    // console.log(isDataEdit)
 
   }
 
@@ -410,9 +367,6 @@ function News() {
       })
     console.log('Received values of form: ', valueUpdate);
   };
-  //create code random
-  // const string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  // const randomCode = Array.apply(null, Array(12)).map(function () { return string.charAt(Math.floor(Math.random() * string.length)); }).join('');
 
   return (
     <>
@@ -676,7 +630,7 @@ function News() {
               <div className="table-responsive" >
                 {isLoading ? <Spin /> :
                   <Table
-                    rowKey={dataUserRef.current.map(item => { return (item.Id) })}
+                    rowKey='_id'
                     dataSource={dataUserRef.current}
                     className="ant-border-space"
                     columns={columns}
@@ -698,10 +652,8 @@ function News() {
                   visible={isEditing}
                 >
                   <Row gutter={[24, 0]}>
-
                     <Col xs={24} sm={24} md={12} lg={12} xl={24} className="mb-24">
                       <Card bordered={false} className="criclebox h-full">
-
                         <Input autoFocus placeholder='Tên sản phẩm'
                           value={isDataEdit.Name}
                           onChange={e =>
@@ -735,7 +687,7 @@ function News() {
                     <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
                       <Card bordered={false} className="criclebox h-full">
 
-                        <Select style={{ width: "100%", lineHeight: "31px" }}
+                        {/* <Select style={{ width: "100%", lineHeight: "31px" }}
                           allowClear
                           placeholder={`${isDataEdit?.SalePrice / isDataEdit?.Price}`}
                           defaultValue={isDataEdit.SalePrice / isDataEdit.Price}
@@ -743,10 +695,8 @@ function News() {
                             setIsDataEdit(pre => {
                               return {
                                 ...pre, SalePrice: e
-                                // * isDataEdit.Price
                               }
                             })
-                            // console.log(isDataEdit.SalePrice)
                           }
                           }
                         >
@@ -755,7 +705,7 @@ function News() {
                           <Option value={0.3}>30%</Option>
                           <Option value={0.5}>50%</Option>
                           <Option value={0.75}>75%</Option>
-                        </Select>
+                        </Select> */}
                       </Card>
                     </Col>
                   </Row>
@@ -903,7 +853,6 @@ function News() {
                           maxCount={5}
                           onChange={(res) => {
                             if (res.file.status === 'done') {
-                              // console.log(res.file.response?.fileName)
                               setFileName(pre => {
                                 return [
                                   ...pre, res.file.response?.fileName,
@@ -920,11 +869,9 @@ function News() {
                         >
                           <Button icon={<UploadOutlined />}>Thêm ảnh (Max&lt;=5)</Button>
                         </Upload>
-                        {/* <Button type='primary'>Upload</Button> */}
                       </Card>
                     </Col>
                   </Row>
-                  {/* <Input.TextArea showCount rows={20} /> */}
                   <p> Mô tả:
                     <CKEditor
                       editor={ClassicEditor}

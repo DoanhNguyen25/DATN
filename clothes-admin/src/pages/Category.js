@@ -35,9 +35,9 @@ function Category() {
     const [disabled, setDisabled] = useState(true)
     const [categoryName, setCategoryName] = useState("")
     const fetchData = async () => {
-        const response = await axios.get(`${API_URL}/category/all`)
+        const response = await axios.get(`${API_URL}/categories`)
         if (response && response.data) {
-            setDataUser(response.data.data.data)
+            setDataUser(response.data)
             setIsLoading(false)
             setSuccess(false)
             // console.log(dataUserRef.current)

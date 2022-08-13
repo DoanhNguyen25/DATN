@@ -45,17 +45,18 @@ const SignIn = () => {
   }, [])
   const onFinish = async (values) => {
 
-    await callApiHeaders('POST', 'authentication/login', { Email: values.email, Password: values.password })
+    await callApiHeaders('POST', 'login', { username: values.username, password: values.password })
       .then((res) => {
-        if (Number(res.data.data.data[0].Role) === 0 || Number(res.data.data.data[0].Role) === 2) {
+        console.log(res.data)
+        if (res.data.isAdmin && res.data.isActive) {
           notification.success({
             message: 'Login Success!',
             description: '',
             className: 'admin-login-success'
           })
-          localStorage.setItem('token_admin', res.data.data.token)
-          localStorage.setItem('user_name', res.data.data.data[0].Name)
-          localStorage.setItem('role', res.data.data.data[0].Role)
+          localStorage.setItem('token_admin', res.data.access_token)
+          localStorage.setItem('user_name', res.data.fullname)
+          localStorage.setItem('role', res.data.isAdmin)
           history.push('/')
         }
         else {
@@ -65,7 +66,6 @@ const SignIn = () => {
             className: 'admin-login-error'
           })
           form.resetFields();
-
         }
       })
       .catch(err => {
@@ -84,40 +84,6 @@ const SignIn = () => {
     <>
       <Layout className="layout-default layout-signin">
         <Header>
-          {/* <div className="header-col header-brand">
-            <h5>Muse Dashboard</h5>
-          </div>
-          <div className="header-col header-nav">
-            <Menu mode="horizontal" defaultSelectedKeys={["1"]}>
-              <Menu.Item key="1">
-                <Link to="/dashboard">
-                  {template}
-                  <span> Dashboard</span>
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="2">
-                <Link to="/profile">
-                  {profile}
-                  <span>Profile</span>
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="3">
-                <Link to="/sign-up">
-                  {signup}
-                  <span> Sign Up</span>
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="4">
-                <Link to="/sign-in">
-                  {signin}
-                  <span> Sign In</span>
-                </Link>
-              </Menu.Item>
-            </Menu>
-          </div> */}
-          {/* <div className="header-col header-btn">
-            <Button type="primary">FREE DOWNLOAD</Button>
-          </div> */}
         </Header>
         <Content className="signin">
           <Row gutter={[24, 0]} justify="space-around">
@@ -139,16 +105,16 @@ const SignIn = () => {
               >
                 <Form.Item
                   className="username"
-                  label="Email"
-                  name="email"
+                  label="Tên người dùng"
+                  name="username"
                   rules={[
                     {
                       required: true,
-                      message: "Nhập Email!",
+                      message: "Nhập Username!",
                     },
                   ]}
                 >
-                  <Input type='email' placeholder="Email" />
+                  <Input type='text' placeholder="Username" />
                 </Form.Item>
 
                 <Form.Item
