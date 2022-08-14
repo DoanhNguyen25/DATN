@@ -39,6 +39,13 @@ router.post("/api/add_to_cart", auth.verifyToken, async (req, res) => {
         (item) => item.productId == productId
       );
 
+      if (quantity > product.quantityInStock) {
+        return res.status(401).send({ message: "số lượng trong kho không đủ" });
+      } else {
+        product.quantityInStock -= quantity;
+        await product.save();
+      }
+
       if (productIndex > -1) {
         let productSelected = cart.products[productIndex];
         productSelected.quantity += quantity;
@@ -80,6 +87,7 @@ router.post("/api/add_to_cart", auth.verifyToken, async (req, res) => {
         ],
         bill: quantity * price,
       });
+      await product.save();
       return res.status(201).send(newCart);
     }
   } catch (error) {
@@ -108,10 +116,24 @@ router.delete("/api/remove/:id", auth.verifyToken, async (req, res) => {
         return acc + curr.quantity * curr.price;
       }, 0);
       await cart.save();
+
       res.status(200).send({ message: "Xóa thành công!!!", cart });
     } else {
       res.status(404).send("product not found!!!");
     }
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
+
+// remove all item in cart
+router.delete("/api/removeAll", auth.verifyToken, async (req, res) => {
+  try {
+    const owner = req.user._id;
+    let cart = await Cart.findOne({ owner });
+    cart.products = [];
+    await cart.save();
+    res.status(201).send(cart);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
@@ -122,6 +144,7 @@ router.patch("/api/cart/update", auth.verifyToken, async (req, res) => {
   const owner = req.user._id;
   const { productId, type } = req.body;
   try {
+    const product = await Product.findOne({ _id: productId });
     let cart = await Cart.findOne({ owner });
     const productIndex = cart.products.findIndex(
       (item) => item.productId == productId
@@ -138,7 +161,7 @@ router.patch("/api/cart/update", auth.verifyToken, async (req, res) => {
       }, 0);
       cart.products[productIndex] = productSelected;
       await cart.save();
-      res.status(200).send({ message: "cập nhật thành công!!!" });
+      res.status(200).send({ message: "cập nhật thành công!!!", cart });
     } else {
       res.status(404).send({ message: "product not found!!!" });
     }

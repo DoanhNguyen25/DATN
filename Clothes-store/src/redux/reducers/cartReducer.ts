@@ -4,6 +4,7 @@ import {
   ADD_CART_SUCCESS,
   ADD_CART__REQUEST,
   GET_CART_DETAIL,
+  REMOVE_ALL_ITEM,
   REMOVE_ITEM,
   UPDATE_CART,
 } from "../actionTypes/ActionTypes";
@@ -43,8 +44,14 @@ export const cartReducer = (
       return {
         ...state,
         message: "thành công",
+        productInCart:action.payload
       };
     case REMOVE_ITEM:
+      return {
+        ...state,
+        productInCart: action.payload,
+      };
+    case REMOVE_ALL_ITEM:
       return {
         ...state,
         productInCart: action.payload,

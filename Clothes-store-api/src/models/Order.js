@@ -29,10 +29,10 @@ const OrderSchema = new mongoose.Schema(
         },
       },
     ],
-    username: { type: String, required: true },
+    fullname: { type: String, required: true },
     address: { type: Object, required: true },
     status: { type: Number, default: 0 },
-    phoneNumber: { type: String, require: true },
+    phone: { type: String, require: true },
     email: { type: String, require: true },
   },
   { timestamps: true }

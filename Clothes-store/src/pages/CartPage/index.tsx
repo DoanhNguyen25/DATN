@@ -4,13 +4,11 @@ import React, { Dispatch, useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import { formatMoney } from "../../components/Functions";
 import MainLayout from "../../layouts/MainLayout";
-import {
-  deleteItemInCart,
-  getCart,
-  updateCart,
-} from "../../redux/action/cartAction";
+import { deleteItemInCart, updateCart } from "../../redux/action/cartAction";
 import { State } from "../../redux/reducers";
+import { ProductInCart } from "../../types/cart.types";
 import ProductItem from "./ProductItem";
 import {
   Bottom,
@@ -42,15 +40,17 @@ import {
 } from "./style";
 
 const CartPage = () => {
-  const dispatch: Dispatch<any> = useDispatch();
   // const [quantity, setQuantity] = useState<Number>();
   const productIncart = useSelector(
     (state: State) => state.cartReducer.productInCart
   );
 
-  useEffect(() => {
-    dispatch(getCart());
-  }, []);
+  const getTotal = (products: ProductInCart[]) => {
+    return products.reduce((pre: number, curr: ProductInCart) => {
+      return pre + curr.price * curr.quantity;
+    }, 0);
+  };
+
   return (
     <MainLayout>
       <Wrapper>
@@ -58,7 +58,7 @@ const CartPage = () => {
         <Top>
           <TopButton typeBtn={""}>CONTINUE SHOPPING</TopButton>
           <TopTexts>
-            <TopText>Shopping Bag(2)</TopText>
+            <TopText>{`Shopping Bag(${productIncart.length})`}</TopText>
             <TopText>Your Wishlist (0)</TopText>
           </TopTexts>
         </Top>
@@ -77,24 +77,28 @@ const CartPage = () => {
           </Info>
           <Summary>
             <SummaryTitle>ORDER SUMMARY</SummaryTitle>
-            <SummaryItem type={""}>
-              <SummaryItemText>Subtotal</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
-            </SummaryItem>
+            
             <SummaryItem type={""}>
               <SummaryItemText>Estimated Shipping</SummaryItemText>
-              <SummaryItemPrice>$ 5.90</SummaryItemPrice>
+              <SummaryItemPrice>{formatMoney(10000)}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem type={""}>
               <SummaryItemText>Shipping Discount</SummaryItemText>
-              <SummaryItemPrice>$ -5.90</SummaryItemPrice>
+              <SummaryItemPrice>{formatMoney(-10000)}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem type="total">
               <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
+              <SummaryItemPrice>
+                {formatMoney(getTotal(productIncart))}
+              </SummaryItemPrice>
             </SummaryItem>
             <Link to={"/my-order"}>
-              <Button style={{ cursor: "pointer" }}>CHECKOUT NOW</Button>
+              <Button
+                style={{ cursor: "pointer" }}
+                disabled={productIncart.length ? false : true}
+              >
+                CHECKOUT NOW
+              </Button>
             </Link>
           </Summary>
         </Bottom>

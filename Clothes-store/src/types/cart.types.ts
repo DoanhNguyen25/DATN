@@ -3,6 +3,7 @@ import {
   ADD_CART_SUCCESS,
   ADD_CART__REQUEST,
   GET_CART_DETAIL,
+  REMOVE_ALL_ITEM,
   REMOVE_ITEM,
   UPDATE_CART,
 } from "../redux/actionTypes/ActionTypes";
@@ -10,11 +11,12 @@ import {
 export interface ProductInCart {
   productId: string;
   productName: String;
-  quantity: Number;
-  price: Number;
+  quantity: number;
+  price: number;
   color: string;
   size: string;
   image: string;
+  _id: string;
 }
 
 export interface CartState {
@@ -43,6 +45,7 @@ interface GetCart {
 
 interface UpdateCart {
   type: typeof UPDATE_CART;
+  payload: ProductInCart[];
 }
 
 interface RemoveItem {
@@ -50,10 +53,15 @@ interface RemoveItem {
   payload: ProductInCart[];
 }
 
+interface RemoveAllItems {
+  type: typeof REMOVE_ALL_ITEM;
+  payload: ProductInCart[];
+}
 export type CartAction =
   | AddCartRequest
   | AddCartSuccess
   | AddCartFail
   | GetCart
   | UpdateCart
-  | RemoveItem;
+  | RemoveItem
+  | RemoveAllItems;

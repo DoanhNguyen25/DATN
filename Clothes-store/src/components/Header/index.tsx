@@ -19,6 +19,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { State } from "../../redux/reducers";
 import { logout } from "../../redux/action/useAction";
+import { getCart } from "../../redux/action/cartAction";
 const Header = () => {
   const [wordEnter, setWordEnter] = useState<string>("");
   const [isOpen, setIsOpen] = useState<Boolean>(false);
@@ -52,6 +53,10 @@ const Header = () => {
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setWordEnter(e.target.value);
   };
+
+  useEffect(() => {
+    dispatch(getCart());
+  }, []);
 
   return (
     <HeaderWrapper>

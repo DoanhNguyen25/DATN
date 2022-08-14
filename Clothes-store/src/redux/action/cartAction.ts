@@ -1,11 +1,18 @@
 import { Dispatch } from "react";
-import { AddToCart, DeleteItem, GetCart, UpdateCart } from "../../api/CartApi";
+import {
+  AddToCart,
+  DeleteAllItems,
+  DeleteItem,
+  GetCart,
+  UpdateCart,
+} from "../../api/CartApi";
 import { CartAction } from "../../types/cart.types";
 import {
   ADD_CART_FAIL,
   ADD_CART_SUCCESS,
   ADD_CART__REQUEST,
   GET_CART_DETAIL,
+  REMOVE_ALL_ITEM,
   REMOVE_ITEM,
   UPDATE_CART,
 } from "../actionTypes/ActionTypes";
@@ -63,6 +70,7 @@ export const updateCart =
       if (req.data) {
         dispatch({
           type: UPDATE_CART,
+          payload: req.data.cart.products,
         });
       }
     } catch (error: any) {
@@ -87,3 +95,13 @@ export const deleteItemInCart =
       toast.error("Xóa không thành công");
     }
   };
+
+export const removeAllItems = () => async (dispath: Dispatch<CartAction>) => {
+  const req = await DeleteAllItems("http://localhost:8000/api/removeAll");
+  if (req.data) {
+    dispath({
+      type: REMOVE_ALL_ITEM,
+      payload: req.data.products,
+    });
+  }
+};

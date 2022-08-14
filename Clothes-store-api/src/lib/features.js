@@ -1,8 +1,8 @@
 // Constructors and object instances
-function APIfeatures(query, queryString) {
+function APIfeatures(query, queryString, params) {
   this.query = query; // Products.find()
   this.queryString = queryString; // req.query
-
+  this.params = params;
   this.paginating = () => {
     const page = this.queryString.page * 1 || 1;
     const limit = this.queryString.size * 1 || 2;
@@ -33,13 +33,15 @@ function APIfeatures(query, queryString) {
   };
 
   this.filtering = () => {
-    const queryObj = { ...this.queryString };
-    console.log({ queryObj });
-    const excludedFields = ["page", "sort", "size", "keySearch"];
-    excludedFields.forEach((el) => delete queryObj[el]);
+    const queryObj = this.queryString;
 
-    let queryStr = JSON.stringify(queryObj);
-
+    if (queryObj.color) {
+      this.query = this.query.find({
+        $or: [{ color: { $regex: queryObj.color } }],
+      });
+    } else {
+      this.query = this.query.find();
+    }
     console.log(queryObj);
     return this;
   };

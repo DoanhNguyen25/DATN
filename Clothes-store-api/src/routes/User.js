@@ -68,6 +68,7 @@ router.get("/api/user/:id", auth.verifyToken, async (req, res) => {
 // api edit user
 router.patch("/api/user/:id", auth.verifyToken, async (req, res) => {
   const updates = Object.keys(req.body);
+  console.log(req.body);
   const allowedUpdates = [
     "username",
     "email",
@@ -75,6 +76,7 @@ router.patch("/api/user/:id", auth.verifyToken, async (req, res) => {
     "isAdmin",
     "avatar",
     "phone",
+    "isActive",
   ];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
@@ -94,7 +96,8 @@ router.patch("/api/user/:id", auth.verifyToken, async (req, res) => {
       username: req.body.username || user.username,
       fullname: req.body.fullname || user.fullname,
       email: req.body.email || user.email,
-      isAdmin: req.body.isAdmin || user.isAdmin,
+      isAdmin: req.body.isAdmin,
+      isActive: req.body.isActive,
       avatar: req.body.avatar || user.avatar,
       phone: req.body.phone || user.phone,
     };
@@ -131,7 +134,7 @@ router.post("/api/sendmail", async (req, res) => {
       to: `${email}`,
       subject: "testing out nodemailer",
       text: "the first email sended by nodemailer",
-      html: "<b>Hello world?</b>",
+      html: `<h1 style="color:red;font-size:12rem">hello ae</h1>`,
     },
     (err) => {
       if (err) {

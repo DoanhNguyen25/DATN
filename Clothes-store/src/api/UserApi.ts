@@ -14,4 +14,5 @@ function EditUser(urlFetch: string, data: UserInfo) {
   return axios.patch(urlFetch, { ...data, isAdmin: false });
 }
 
+
 export { SendMail, UploadFile, GetUserInfo, EditUser };

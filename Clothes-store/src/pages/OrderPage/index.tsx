@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 import MainLayout from "../../layouts/MainLayout";
 import { OrderPageWrapper } from "./style";
 import { useFormik } from "formik";
@@ -10,12 +10,33 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import { useSelector } from "react-redux";
+import { State } from "../../redux/reducers";
+import { useDispatch } from "react-redux";
+import {
+  deleteItemInCart,
+  getCart,
+  removeAllItems,
+} from "../../redux/action/cartAction";
+import { ProductInCart } from "../../types/cart.types";
+import { formatMoney } from "../../components/Functions";
+import { CreateOrder } from "../../api/OrderApi";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const OrderPage = () => {
-  const [value, setValue] = React.useState("0");
+  const [payment, setPayment] = React.useState("0");
+  const [isSuccess, setIsSuccess] = useState(false);
+  const dispatch: Dispatch<any> = useDispatch();
+  const products = useSelector(
+    (state: State) => state.cartReducer.productInCart
+  );
+  const navigate = useNavigate();
+
+  console.log(products);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
+    setPayment(event.target.value);
   };
 
   const formik = useFormik({
@@ -37,9 +58,32 @@ const OrderPage = () => {
       address: Yup.string().required("không được để trống"),
     }),
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      createOrder();
     },
   });
+
+  const getTotal = (products: ProductInCart[]) => {
+    return products.reduce((pre: number, curr: ProductInCart) => {
+      return pre + curr.price * curr.quantity;
+    }, 0);
+  };
+
+  const createOrder = async () => {
+    try {
+      const req = await CreateOrder(
+        "http://localhost:8000/api/create-order",
+        formik.values
+      );
+
+      if (req.data) {
+        toast.success("đặt hàng thành công!!!");
+        dispatch(removeAllItems());
+        navigate("/");
+      }
+    } catch (error) {
+      toast.error("đặt hàng thất bại!!");
+    }
+  };
   return (
     <MainLayout>
       <OrderPageWrapper>
@@ -104,15 +148,12 @@ const OrderPage = () => {
                 </div>
               </div>
             </form>
-            <StripePayment />
           </div>
           <div className="order__info">
             <div className="order__info--products">
-              <CardItemOrder />
-              <CardItemOrder />
-              <CardItemOrder />
-              <CardItemOrder />
-              <CardItemOrder />
+              {products.map((product) => (
+                <CardItemOrder product={product} key={product.productId} />
+              ))}
             </div>
 
             <div className="order__info--payment">
@@ -120,7 +161,7 @@ const OrderPage = () => {
                 <div className="pricing">
                   <span style={{ fontSize: "2rem" }}>Tổng:</span>
                   <span style={{ textAlign: "right", fontSize: "1.5rem" }}>
-                    120000$
+                    {formatMoney(getTotal(products))}
                   </span>
                 </div>
 
@@ -128,7 +169,7 @@ const OrderPage = () => {
                   <RadioGroup
                     aria-labelledby="demo-controlled-radio-buttons-group"
                     name="controlled-radio-buttons-group"
-                    value={value}
+                    value={payment}
                     onChange={handleChange}
                     style={{ flexDirection: "row" }}
                   >
@@ -146,14 +187,31 @@ const OrderPage = () => {
                 </FormControl>
 
                 <div className="btn-order">
-                  <button
-                    type="submit"
-                    onClick={() => {
-                      formik.submitForm();
-                    }}
-                  >
-                    Đặt hàng
-                  </button>
+                  {payment === "0" ? (
+                    <button
+                      type="submit"
+                      onClick={() => {
+                        formik.submitForm();
+                      }}
+                    >
+                      Đặt hàng
+                    </button>
+                  ) : (
+                    <StripePayment
+                      onClick={() => formik.submitForm()}
+                      name={formik.values.fullname}
+                      amount={getTotal(products)}
+                      formik={formik}
+                      disable={
+                        formik.values.fullname ||
+                        formik.values.phone ||
+                        formik.values.email ||
+                        formik.values.address
+                          ? false
+                          : true
+                      }
+                    />
+                  )}
                 </div>
               </div>
             </div>

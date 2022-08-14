@@ -41,7 +41,6 @@ const ProductSchema = new mongoose.Schema(
     reviews: [CommentSchema],
     quantityInStock: {
       type: Number,
-      required: true,
       default: 1,
     },
   },

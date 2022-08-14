@@ -47,8 +47,8 @@ export const OrderPageWrapper = styled.div`
 
       &--products {
         width: 100%;
-        min-height: 6rem;
-        height: 28rem;
+         
+        max-height: 28rem;
         overflow: auto;
         padding-right: 0.5rem;
 

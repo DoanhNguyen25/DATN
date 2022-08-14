@@ -6,11 +6,11 @@ const { Order } = require("../models/Order");
 
 // CREATE ORDER
 router.post("/api/create-order", auth.verifyToken, async (req, res) => {
-  const { username, address, phoneNumber, email, status } = req.body;
-  const cart = await Cart.findOne({ userId: req.user._id });
+  const { fullname, address, phone, email, status } = req.body;
+  const cart = await Cart.findOne({ owner: req.user._id });
 
   try {
-    if (!username || !address || !phoneNumber || !email) {
+    if (!fullname || !address || !phone || !email) {
       res.status(400).send({ message: "Vui lòng nhập đủ thông tin." });
     } else {
       const order = new Order({
@@ -18,10 +18,10 @@ router.post("/api/create-order", auth.verifyToken, async (req, res) => {
         cartId: cart,
         products: cart.products,
         email: email,
-        phoneNumber: phoneNumber,
+        phone: phone,
         status: status,
         address: address,
-        username: username,
+        fullname: fullname,
       });
 
       await order.save();
@@ -68,23 +68,27 @@ router.delete("/api/order/:id", auth.verifyToken, async (req, res) => {
 
 // UPDATE ORDER
 // JUST ADMIN TO DO THAT
-router.patch("/api/order/:id", auth.verifyTokenAndAuthorization, async (req, res) => {
-  const order = await Order.findById(req.params.id);
-  try {
-    if (!order) {
-      res.status(404).send({ message: "Đơn hàng không tồn tại!!!" });
-    } else if (order.status === 2) {
-      res
-        .status(401)
-        .send({ message: "Không thể cập nhật đơn hàng đã thanh toán!!!" });
-    } else {
-      order.status = req.body.status;
-      await order.save();
-      res.status(200).send({ message: "cập nhật thành công", order });
+router.patch(
+  "/api/order/:id",
+  auth.verifyTokenAndAuthorization,
+  async (req, res) => {
+    const order = await Order.findById(req.params.id);
+    try {
+      if (!order) {
+        res.status(404).send({ message: "Đơn hàng không tồn tại!!!" });
+      } else if (order.status === 2) {
+        res
+          .status(401)
+          .send({ message: "Không thể cập nhật đơn hàng đã thanh toán!!!" });
+      } else {
+        order.status = req.body.status;
+        await order.save();
+        res.status(200).send({ message: "cập nhật thành công", order });
+      }
+    } catch (error) {
+      res.status(200).send({ message: error.message });
     }
-  } catch (error) {
-    res.status(200).send({ message: error.message });
   }
-});
+);
 
 module.exports = router;

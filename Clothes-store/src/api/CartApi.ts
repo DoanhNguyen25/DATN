@@ -24,4 +24,7 @@ function UpdateCart(urlFetch: string, body: UpdateBody) {
 function DeleteItem(urlFetch: string) {
   return axios.delete(urlFetch);
 }
-export { AddToCart, GetCart, UpdateCart, DeleteItem };
+function DeleteAllItems(urlFetch: string) {
+  return axios.delete(urlFetch);
+}
+export { AddToCart, GetCart, UpdateCart, DeleteItem, DeleteAllItems };

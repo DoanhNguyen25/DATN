@@ -30,18 +30,18 @@ router.get("/api/products", async (req, res) => {
     const features = new APIfeatures(Product.find(), req.query)
       .paginating()
       .sorting()
-      .searching();
+      .searching()
 
     const products = await features.query;
 
     res.status(200).send({
       products: products,
       page: features.queryString.page || 1,
-      page_size: features.queryString.size * 1 || 2,
+      page_size: features.queryString.size * 1 || 3,
       totalRows: total,
     });
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send(error.message);
   }
 });
 
@@ -57,12 +57,29 @@ router.get("/api/product/:id", async (req, res) => {
 
 // get product by category
 router.get("/api/product2/:categoryId", async (req, res) => {
+  const total = await Product.countDocuments({
+    categories: req.params.categoryId,
+  });
+
   try {
-    const product = await Product.find({ categories: req.params.categoryId });
+    const features = new APIfeatures(
+      Product.find({ categories: req.params.categoryId }),
+      req.query,
+      req.params
+    )
+      .sorting()
+      .paginating()
+      .filtering();
+    const product = await features.query;
     if (!product) {
       res.status(401).send({ message: "Products not found!!" });
     }
-    res.status(200).send(product);
+    res.status(200).send({
+      products: product,
+      page: features.queryString.page || 1,
+      page_size: features.queryString.size * 1 || 2,
+      totalRows: total,
+    });
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
@@ -79,6 +96,7 @@ router.patch("/api/product/:id", auth.verifyToken, async (req, res) => {
     "size",
     "color",
     "price",
+    "quantityInStock",
   ];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)

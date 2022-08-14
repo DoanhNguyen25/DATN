@@ -1,22 +1,31 @@
 import React from "react";
+import { formatMoney } from "../../components/Functions";
+import { ProductInCart } from "../../types/cart.types";
+import { IProduct } from "../../types/product.types";
 import { CartItemWrapper } from "./style";
+interface IProp {
+  product: ProductInCart;
+  // hello: string;
+}
 
-const CardItemProduct = () => {
+const CardItemProduct = (props: IProp) => {
+
   return (
     <CartItemWrapper>
       <div className="order--product__image">
-        <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT81g7tlDiHOq-RkJbH1EjpRfHhK_92RjfVdw&usqp=CAU"
-          alt="not"
-        />
+        <img src={props.product.image} alt="not" />
       </div>
       <div className="order--product__content">
         <div className="product__content--left">
-          <span className="product__name">ao thun  x1</span>
-          <p className="product__color">Color: red, Size:XL</p>
+          <span className="product__name">
+            {props.product.productName} {"  x"} {props.product.quantity}
+          </span>
+          <p className="product__color">{`Color:${props.product.color}, Size:${props.product.size}`}</p>
         </div>
         <div className="product__content_right">
-          <span className="product__price">576,000vnd</span>
+          <span className="product__price">
+            {formatMoney(props.product.price * props.product.quantity)}
+          </span>
         </div>
       </div>
     </CartItemWrapper>
