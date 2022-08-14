@@ -31,7 +31,7 @@ function App() {
           <Route exact path="/Hóa đơn" component={Billing} />
           <Route exact path="/rtl" component={Rtl} />
           <Route exact path="/profile" component={Profile} />
-          <Redirect from="*" to="/Thống kê" />
+          {/* <Redirect from="*" to="/Thống kê" /> */}
         </Main>
       </Switch>
     </div>

@@ -35,7 +35,7 @@ router.get("/api/users", async (req, res) => {
   try {
     const user = await User.find({});
     res.status(200).send(user);
-  } catch (error) {}
+  } catch (error) { }
 });
 
 // api get user info
@@ -74,6 +74,7 @@ router.patch("/api/user/:id", auth.verifyToken, async (req, res) => {
     "email",
     "fullname",
     "isAdmin",
+    "isActive",
     "avatar",
     "phone",
     "isActive",
