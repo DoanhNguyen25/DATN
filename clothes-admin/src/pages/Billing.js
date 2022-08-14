@@ -33,12 +33,15 @@ function Billing() {
   const [success, setSuccess] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const fetchData = async () => {
-    const response = await axios.get(`${API_URL}/bill/all`)
+    const response = await axios.get(`${API_URL}/order`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token_admin')}`
+      }
+    })
     if (response && response.data) {
-      setDataUser(response.data.data.data)
+      setDataUser(response.data)
       setIsLoading(false)
       setSuccess(false)
-      // console.log(dataUserRef.current)
     }
   }
 
@@ -77,39 +80,38 @@ function Billing() {
   const columns = [
     {
       title: "Mã hóa đơn",
-      dataIndex: "Code",
-      key: "Code",
+      dataIndex: "_id",
+      key: "_id",
       width: 10,
     },
     {
       title: "Khách hàng",
-      dataIndex: "Account",
-      key: "Account",
+      dataIndex: "username",
+      key: "username",
       width: 30,
       // sorter: (a, b) => a.Name.length - b.Name.length,
       // fixed: 'left'
     },
     {
-      title: "Thành tiền",
-      // dataIndex: "Total",
-      key: "Total",
-      width: 30,
-      render(record) {
-        return (
-          <>
-            {Format(record.Total)}
-          </>
-        );
-      }
+      title: "Địa chỉ",
+      dataIndex: "address",
+      key: "address",
+      width: 50,
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
+      width: 50,
     },
     {
       title: "Ngày đặt",
-      key: "OrderDate",
+      key: "createdAt",
       width: 50,
       render(record) {
         return (
           <div>
-            {moment(record.OrderDate).format('DD-MM-YYYY')}
+            {moment(record.createdAt).format('DD-MM-YYYY')}
           </div>
         );
       }
@@ -169,56 +171,47 @@ function Billing() {
   const columnsDetail = [
     {
       title: "Tên sản phẩm",
-      dataIndex: "Name",
-      key: "Name",
-      width: 10,
+      dataIndex: "productName",
+      key: "productName",
+      // width: 10,
+    },
+    {
+      title: "Màu",
+      dataIndex: "productName",
+      key: "color",
+      // width: 10,
+    },
+    {
+      title: "Kích cỡ",
+      dataIndex: "size",
+      key: "productName",
+      // width: 10,
     },
     {
       title: "Số lượng",
-      dataIndex: "Quantity",
-      key: "Quantity",
-      width: 30,
-      // sorter: (a, b) => a.Name.length - b.Name.length,
-      // fixed: 'left'
+      dataIndex: "quantity",
+      key: "quantity",
+      // width: 30,
     },
     {
       title: "Đơn giá",
-      // dataIndex: "Price",
-      key: "Price",
-      width: 30,
+      key: "price",
+      // width: 30,
       render(record) {
         return (
           <>
-            {Format(record.Price)}
-          </>
-        );
-      }
-    },
-    {
-      title: "Thành tiền",
-      key: "Amount",
-      width: 100,
-      // dataIndex: "TransformMethod",
-      render(record) {
-        return (
-          <>
-            {Format(record.Amount)}
+            {Format(record.price)}
           </>
         );
       }
     },
 
+
   ];
   const handleDetailBill = async (record) => {
     setIsEditing(true);
-    await axios.get(`${API_URL}/bill/${record.Id}`)
-      .then(res => {
-        setIsDataEdit(res.data.data.data)
-        setIsLoading(false)
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    setIsDataEdit(dataUserRef.current?.find(item => item._id === record._id).products)
+    setIsLoading(false)
   }
 
   return (
@@ -234,7 +227,7 @@ function Billing() {
               <div className="table-responsive" >
                 {isLoading ? <Spin /> :
                   <Table
-                    rowKey={dataUserRef.current.map(item => { return (item.Id) })}
+                    rowKey='_id'
                     columns={columns}
                     dataSource={dataUserRef.current}
                     pagination={{ pageSize: 5 }}
@@ -244,7 +237,7 @@ function Billing() {
 
                 <Drawer
                   title="Hóa đơn chi tiết"
-                  width={720}
+                  width={600}
                   bodyStyle={{ paddingBottom: 80 }}
                   onClose={() => {
                     setIsEditing(false)
@@ -253,7 +246,8 @@ function Billing() {
                 >
                   <Row gutter={[24, 0]}>
                     <Table
-                      rowKey={isDataEditRef.current.map(item => { return (item.Id) })}
+                      width={"100%"}
+                      rowKey='productId'
                       columns={columnsDetail}
                       dataSource={isDataEditRef.current}
                       pagination={{ pageSize: 5 }}

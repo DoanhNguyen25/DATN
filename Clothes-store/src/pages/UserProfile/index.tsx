@@ -279,8 +279,21 @@ const UserProfile = () => {
                     </div>
                   </div>
                 </div>
-                <button type="submit">Lưu</button>
+
+                <button>Lưu</button>
               </form>
+            </div>
+            <div className="detail__avatar">
+              <div className="detail__avatar--image">
+                <img src="https://images.pexels.com/photos/5480696/pexels-photo-5480696.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" alt="img" />
+              </div>
+              <div className="detail__avatar--btn">
+                <button>Chọn ảnh</button>
+              </div>
+              <br />
+              <div className="detail__avatar--desc">
+                Dụng lượng file tối đa 1 MB Định dạng:.JPEG, .PNG
+              </div>
             </div>
           </div>
         </div>

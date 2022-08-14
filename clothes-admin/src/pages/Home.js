@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import React, { useState, useEffect } from "react";
@@ -9,9 +10,6 @@ import {
   Typography,
   Table, Spin, Select
 } from "antd";
-// import {
-//   ToTopOutlined
-// } from "@ant-design/icons";
 
 import useStateRef from "react-usestateref";
 import { Format } from '../services/Format'
@@ -22,14 +20,9 @@ import axios from 'axios'
 import { API_URL } from '../api/API_URL'
 import { Authentication } from "../services/authentication";
 const { Option } = Select;
-const url = 'https://res.cloudinary.com/dbfjceflf/image/upload/v1651304838/h2tstore/'
+// const url = 'https://res.cloudinary.com/dbfjceflf/image/upload/v1651304838/h2tstore/'
 function Home() {
-  // const history = useHistory()
-  // const auth = localStorage.getItem('token_admin') ? true : false
   Authentication()
-  useEffect(() => {
-    // !auth && history.replace('/sign-in')
-  }, [])
 
   const { Title } = Typography;
   const [dataUser, setDataUser, dataUserRef] = useStateRef([])
@@ -40,20 +33,18 @@ function Home() {
 
 
   const fetchData = async () => {
-    const dash = await axios.get(`${API_URL}/dashboard/all/${monthOrder}`)
-    const response = await axios.get(`${API_URL}/product/latest`)
-    const res = await axios.get(`${API_URL}/category/all`)
-    if (dash && dash.data) {
-      setDashboard(dash.data.data)
-    }
+    // const dash = await axios.get(`${API_URL}/dashboard/all/${monthOrder}`)
+    const response = await axios.get(`${API_URL}/products`)
+    const res = await axios.get(`${API_URL}/categories`)
+    // if (dash && dash.data) {
+    //   setDashboard(dash)
+    // }
     if (response && response.data) {
-      setDataUser(response.data.data.data)
+      setDataUser(response.data.products)
       setIsLoading(false)
-      // console.log(dataUserRef.current)
     }
     if (res && res.data) {
-      setCategory(res.data.data.data)
-      // console.log(categoryRef.current)
+      setCategory(res.data)
     }
   }
   useEffect(() => {
@@ -148,25 +139,29 @@ function Home() {
   const count = [
     {
       today: "Tổng sản phầm",
-      title: dashboardRef.current?.TotalProduct,
+      // title: dashboardRef.current?.TotalProduct,
+      title: 1,
       icon: dollor,
       bnb: "bnb2",
     },
     {
       today: "Tổng đơn hàng",
-      title: dashboardRef.current?.TotalOrder,
+      title: 1,
+      // title: dashboardRef.current?.TotalOrder,
       icon: profile,
       bnb: "bnb2",
     },
     {
       today: "Tài khoản",
-      title: '+' + dashboardRef.current?.TotalAccount,
+      title: '+' + 1,
+      // title: '+' + dashboardRef.current?.TotalAccount,
       icon: heart,
       bnb: "redtext",
     },
     {
       today: "Doanh thu",
-      title: Format(dashboardRef.current?.TotalRevenues),
+      title: Format(1),
+      // title: Format(dashboardRef.current?.TotalRevenues),
       icon: cart,
       bnb: "bnb2",
     },
@@ -185,15 +180,15 @@ function Home() {
       render(record) {
         return (
           <>
-            <img src={url + record.Image[0]} alt='not' width={30} height={35} title={record.Name} />&emsp;{record.Name}
+            <img src={record.listImg[0]} alt='not' width={30} height={35} title={record.title} />&emsp;{record.title}
           </>
         );
       }
     },
     {
       title: "Mô tả",
-      key: "Description",
-      dataIndex: 'Description',
+      key: "desc",
+      dataIndex: 'desc',
       width: 400,
       ellipsis: {
         showTitle: false,
@@ -213,7 +208,7 @@ function Home() {
       render(record) {
         return (
           <>
-            {Format(record.Price)}
+            {Format(record.price)}
           </>
         );
       }
@@ -225,7 +220,7 @@ function Home() {
       render(record) {
         return (
           <>
-            {Format(record.SalePrice)}
+            {Format(record.price)}
           </>
         );
       }
@@ -233,39 +228,34 @@ function Home() {
     {
       title: "Danh mục",
       key: "Category",
+      // dataIndex: "categories",
       width: 100,
       render(record) {
         return (
           <>
-            {categoryRef.current.filter(item => {
-              if (Number(item.Id) === Number(record.CategoryId)) {
-                return item
-              }
-            })[0]?.Name}
-            {/* {record.CategoryId} */}
+            {record.categories.category_name}
           </>
         );
       }
     },
     {
       title: "Sô lượng",
-      key: "Quantity",
-      dataIndex: "Quantity",
+      key: "quantityInStock",
+      dataIndex: "quantityInStock",
       width: 80,
     },
-    {
-      title: "Size",
-      key: "Size",
-      width: 130,
-      // dataIndex: "Size",
-      render(record) {
-        return (
-          <div>
-            {record.Size.join(',')}
-          </div>
-        );
-      }
-    }
+    // {
+    //   title: "Size",
+    //   key: "Size",
+    //   width: 130,
+    //   render(record) {
+    //     return (
+    //       <div>
+    //         {record.Size.join(',')}
+    //       </div>
+    //     );
+    //   }
+    // }
 
   ];
 
@@ -342,7 +332,7 @@ function Home() {
               <div className="ant-list-box table-responsive">
                 {isLoading ? <Spin /> :
                   <Table
-                    rowKey={dataUserRef.current.map(item => { return (item.Id) })}
+                    rowKey='_id'
                     // expandable={{
                     //   expandedRowRender: record => <p style={{ margin: 0 }}>{record.Description}</p>,
                     //   // rowExpandable: record => record.Name !== 'Not Expandable',

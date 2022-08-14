@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 import './style.css'
 import {
   Row, Col, Card, Button, Table, Avatar, Form, InputNumber, Upload,
-  Typography, Pagination, Modal, Input, Select, notification, Spin, Drawer, Popconfirm,
+  Typography, Pagination, Modal, Input, Select, notification, Spin, Drawer, Popconfirm, message,
 } from "antd";
 import { DeleteOutlined, EditOutlined, PlusSquareOutlined, UploadOutlined, SearchOutlined } from '@ant-design/icons';
 
@@ -78,18 +78,16 @@ function News() {
   const [addNews, setAddNews] = useState(false)
   const [editorLoaded, setEditorLoaded] = useState(false);
   const fetchData = async () => {
-    const response = await axios.get(`${API_URL}/product/list`)
-    const res = await axios.get(`${API_URL}/category/all`)
+    const response = await axios.get(`${API_URL}/products?size=10`)
+    const res = await axios.get(`${API_URL}/categories`)
     if (response && response.data) {
-      setDataUser(response.data.data.data)
-      setDataSearch(response.data.data.data)
+      setDataUser(response.data.products)
+      setDataSearch(response.data.products)
       setIsLoading(false)
       setSuccess(false)
-      // console.log(dataUserRef.current)
     }
     if (res && res.data) {
-      setCategory(res.data.data.data)
-      // console.log(categoryRef.current)
+      setCategory(res.data)
     }
   }
 
@@ -113,22 +111,21 @@ function News() {
     })
   }
   const columns = [
-
     {
       title: "Tên sản phẩm",
-      key: "Name",
+      key: "title",
       width: 220,
       fixed: 'left',
-      sorter: (a, b) => a.Name.length - b.Name.length,
+      sorter: (a, b) => a.title.length - b.title.length,
       ellipsis: {
         showTitle: false,
       },
       render(record) {
         return (
           <>
-            {record.Image ?
-              (<><img src={url + record.Image[0]} alt='not' width={30} height={35} title={record.Name} />&emsp;{record.Name}</>)
-              : (<><img src={url + 'empty.png'} alt='not' width={30} height={35} title={record.Name} />&emsp;{record.Name}</>)
+            {record.listImg ?
+              (<><img src={record.listImg[0]} alt='not' width={30} height={35} title={record.title} />&emsp;{record.title}</>)
+              : (<><img src={url + 'empty.png'} alt='not' width={30} height={35} title={record.title} />&emsp;{record.title}</>)
             }
           </>
         );
@@ -136,8 +133,8 @@ function News() {
     },
     {
       title: "Mô tả",
-      key: "Description",
-      dataIndex: 'Description',
+      key: "desc",
+      dataIndex: 'desc',
       width: 400,
       ellipsis: {
         showTitle: false,
@@ -145,71 +142,31 @@ function News() {
     },
     {
       title: "Giá ban đầu",
-      key: "Price",
+      key: "price",
       width: 120,
-      sorter: (a, b) => a.Price - b.Price,
+      sorter: (a, b) => a.price - b.price,
       render(record) {
         return (
           <>
-            {Format(record.Price)}
-          </>
-        );
-      }
-    },
-    {
-      title: "Giá bán",
-      key: "SalePrice",
-      width: 100,
-      sorter: (a, b) => a.SalePrice - b.SalePrice,
-      render(record) {
-        return (
-          <>
-            {Format(record.SalePrice)}
+            {Format(record.price)}
           </>
         );
       }
     },
     {
       title: "Danh mục",
-      key: "Category",
+      key: "categories",
       width: 120,
-      filters: [
-        {
-          text: 'Áo',
-          value: '1',
-        },
-        {
-          text: 'Quần',
-          value: '5',
-        },
-        {
-          text: 'Áo Nam',
-          value: '9',
-        },
-        {
-          text: 'Quần Nam',
-          value: '10',
-        },
-        {
-          text: 'Áo Nữ',
-          value: '11',
-        },
-        {
-          text: 'Quần Nữ',
-          value: '13',
-        },
-      ],
-      onFilter: (value, record) => record.CategoryId.indexOf(value) === 0,
-      sorter: (a, b) => a.CategoryId - b.CategoryId,
+      filters: categoryRef.current.map(item => ({
+        text: item.category_name,
+        value: item._id,
+      })),
+      onFilter: (value, record) => record.categories._id?.indexOf(value) === 0,
+      sorter: (a, b) => a._id - b._id,
       render(record) {
         return (
           <>
-            {categoryRef.current.filter(item => {
-              if (Number(item.Id) === Number(record.CategoryId)) {
-                return item
-              }
-            })[0]?.Name}
-            {/* {record.CategoryId} */}
+            {record.categories.category_name}
           </>
         );
       }
@@ -217,7 +174,6 @@ function News() {
     {
       title: "Trạng thái",
       key: "StatusId",
-      // dataIndex: 'StatusId',
       width: 120,
       filters: [
         {
@@ -235,18 +191,18 @@ function News() {
       ],
       onFilter: (value, record) => {
         if (Number(value) === 6)
-          return (record.Quantity >= 10)
+          return (record.quantityInStock >= 10)
         if (Number(value) === 7)
-          return (record.Quantity <= 10 & record.Quantity > 0)
+          return (record.quantityInStock <= 10 & record.quantityInStock > 0)
         if (Number(value) === 8)
-          return (record.Quantity === 0)
+          return (record.quantityInStock === 0)
 
       },
       render(record) {
         return (
           <>
-            {record.Quantity &&
-              record.Quantity !== 0 ? (record.Quantity > 10 ? 'Còn hàng' : (record.Quantity <= 10 & record.Quantity > 0) && 'Sắp hết hàng') : ('Hết hàng')
+            {record.quantityInStock &&
+              record.quantityInStock !== 0 ? (record.quantityInStock > 10 ? 'Còn hàng' : (record.quantityInStock <= 10 & record.quantityInStock > 0) && 'Sắp hết hàng') : ('Hết hàng')
             }
           </>
         );
@@ -254,23 +210,10 @@ function News() {
     },
     {
       title: "Số lượng",
-      key: "Quantity",
-      dataIndex: "Quantity",
+      key: "quantityInStock",
+      dataIndex: "quantityInStock",
       width: 90,
-      sorter: (a, b) => a.Quantity - b.Quantity,
-    },
-    {
-      title: "Size",
-      key: "Size",
-      width: 130,
-      // dataIndex: "Size",
-      render(record) {
-        return (
-          <div>
-            {record.Size.join(',')}
-          </div>
-        );
-      }
+      sorter: (a, b) => a.quantityInStock - b.quantityInStock,
     },
     {
       title: "Hành động",
@@ -291,11 +234,57 @@ function News() {
     },
 
   ];
+  const props = {
+    name: 'listImage',
+    action: 'http://localhost:8000/api/upload/multiple',
+    headers: {
+      authorization: 'authorization-text',
+    },
+    maxCount: 5,
+    multiple: true,
 
+    onChange(info) {
+      if (info.file.status !== 'uploading') {
+        setIsDataEdit({
+          ...isDataEdit,
+          listImg: info.fileList?.map(item => item.response[0]),
+        })
+      }
+
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+  const addProps = {
+    name: 'avatar',
+    action: 'http://localhost:8000/api/upload/single',
+    headers: {
+      authorization: 'authorization-text',
+    },
+    maxCount: 1,
+    onChange(info) {
+      console.log(info)
+      if (info.file.status !== 'uploading') {
+        setIsDataAdd({
+          ...isDataAdd,
+          listImg: info.fileList[0].response.url,
+        })
+      }
+
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
   const BtnModalUpdate = (record) => {
     setIsEditing(true)
-    setIsDataEdit({ ...record, Image: [] })
-
+    setIsDataEdit({ ...record, _id: record._id, listImg: [] })
+    console.log(record._id);
   }
 
   const BtnDelete = async (record) => {
@@ -304,7 +293,11 @@ function News() {
     //   onText: "Yes",
     //   okType: 'danger',
     //   onOk: async () => {
-    await axios.delete(`${API_URL}/product/delete/${record.Id}`)
+    await axios.delete(`${API_URL}/product/${record._id}`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token_admin')}`
+      }
+    })
       .then(() => {
         notification.success({
           message: 'Delete Success!',
@@ -326,22 +319,19 @@ function News() {
 
   }
   const UpdateUser = async () => {
-    const dataPro = dataUserRef.current.filter(item => {
-      if (Number(item.Id) === Number(isDataEdit.Id))
-        return item
-    })
-
-    await axios.put(`${API_URL}/product/update/${isDataEdit.Id}`,
+    await axios.patch(`${API_URL}/product/${isDataEdit._id}`,
       {
-        ...isDataEdit,
-        Image: isDataEdit.Image ? isDataEdit.Image?.join(',') : 'empty.png',
-        SalePrice: Number(dataPro[0].SalePrice) === Number(isDataEdit.SalePrice) ? (dataPro[0].SalePrice / isDataEdit.Price) * isDataEdit.Price : isDataEdit.SalePrice * isDataEdit.Price,
-        Size: isDataEdit.Size?.join(","),
-        Color: isDataEdit.Color?.join(",")
+        title: isDataEdit.title,
+        color: isDataEdit.color,
+        size: isDataEdit.size,
+        categories: isDataEdit.categories._id,
+        listImg: isDataEdit.listImg?.join(),
+        desc: isDataEdit.desc,
       },
       {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token_admin')}`
         }
       })
       .then(() => {
@@ -352,9 +342,7 @@ function News() {
         })
         setIsLoading(false)
         setSuccess(true)
-        // setIsDataEdit({})
         setIsEditing(false)
-        // setAddNews(false)
       })
       .catch(err => {
         notification.error({
@@ -364,30 +352,28 @@ function News() {
         })
         setSuccess(false)
       })
-    // setIsEditing(false)
-    // console.log(isDataEdit)
 
   }
 
 
   const [form] = Form.useForm();
   //create code random
-  const string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  const randomCode = Array.apply(null, Array(12)).map(function () { return string.charAt(Math.floor(Math.random() * string.length)); }).join('');
+  // const string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  // const randomCode = Array.apply(null, Array(12)).map(function () { return string.charAt(Math.floor(Math.random() * string.length)); }).join('');
 
   const AddNews = async (values) => {
     const valueUpdate = {
       ...values,
-      Code: randomCode,
-      SalePrice: values.Price * values.SalePrice,
-      Size: values.Size.join(","),
-      Color: 'Trắng',
-      Image: isDataAdd.Image ? isDataAdd.Image : 'empty.png',
-      Description: isDataAdd.Description
+      hello: values.size,
+      categories: values.categories,
+      color: 'Trắng',
+      listImg: isDataAdd.listImg,
+      desc: isDataAdd.desc
     }
-    axios.post(`${API_URL}/product/add`, valueUpdate, {
+    axios.post(`${API_URL}/create`, valueUpdate, {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token_admin')}`
       }
     })
       .then(() => {
@@ -410,9 +396,6 @@ function News() {
       })
     console.log('Received values of form: ', valueUpdate);
   };
-  //create code random
-  // const string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  // const randomCode = Array.apply(null, Array(12)).map(function () { return string.charAt(Math.floor(Math.random() * string.length)); }).join('');
 
   return (
     <>
@@ -453,11 +436,10 @@ function News() {
                       scrollToFirstError
                     >
                       <Row gutter={[24, 0]}>
-
                         <Col xs={24} sm={24} md={12} lg={12} xl={24} className="mb-24">
                           <Card bordered={false} className="criclebox h-full">
                             <Form.Item
-                              name="Name"
+                              name="title"
                               rules={[
                                 {
                                   required: true,
@@ -469,12 +451,10 @@ function News() {
                             </Form.Item>
                           </Card>
                         </Col>
-                      </Row>
-                      <Row gutter={[24, 0]}>
                         <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
                           <Card bordered={false} className="criclebox h-full">
                             <Form.Item
-                              name="Price"
+                              name="price"
                               rules={[
                                 {
                                   type: 'number',
@@ -490,49 +470,12 @@ function News() {
                             </Form.Item>
                           </Card>
                         </Col>
-                        <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
-                          <Card bordered={false} className="criclebox h-full">
-                            <Form.Item name="SalePrice"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: 'Nhập giá bán',
-                                },
-                              ]}>
-                              <Select style={{ width: "100%", lineHeight: "31px" }} allowClear placeholder="Giá bán">
-                                <Option value={1}>0%</Option>
-                                <Option value={0.25}>25%</Option>
-                                <Option value={0.30}>30%</Option>
-                                <Option value={0.50}>50%</Option>
-                                <Option value={0.75}>75%</Option>
-                              </Select>
-                            </Form.Item>
-                          </Card>
-                        </Col>
                       </Row>
                       <Row gutter={[24, 0]}>
                         <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
                           <Card bordered={false} className="criclebox h-full">
-                            <Form.Item name="UnitOfMeasureId"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: 'Chọn đơn vị',
-                                },
-                              ]}>
-                              <Select style={{ width: "100%", lineHeight: "31px" }} placeholder="Chọn đơn vị">
-                                <Option value={1}>Cái</Option>
-                                <Option value={2}>Chiếc</Option>
-                                <Option value={3}>Bộ</Option>
-                                <Option value={4}>Đôi</Option>
-                              </Select>
-                            </Form.Item>
-                          </Card>
-                        </Col>
-                        <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
-                          <Card bordered={false} className="criclebox h-full">
                             <Form.Item
-                              name="CategoryId"
+                              name="categories"
                               rules={[
                                 {
                                   required: true,
@@ -541,12 +484,34 @@ function News() {
                               ]}
                             >
                               <Select style={{ width: "100%", lineHeight: "31px" }} placeholder="Danh mục">
-                                <Option value="1">Áo</Option>
-                                <Option value="5">Quần</Option>
-                                <Option value="9">Áo Nam</Option>
-                                <Option value="10">Quần Nam</Option>
-                                <Option value="11">Áo Nữ</Option>
-                                <Option value="13">Quần Nữ</Option>
+                                {categoryRef.current.map(item =>
+                                  <Option key={item._id} value={item._id}>{item.category_name}</Option>
+                                )}
+                              </Select>
+                            </Form.Item>
+                          </Card>
+                        </Col>
+                        <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
+                          <Card bordered={false} className="criclebox h-full">
+                            <Form.Item
+                              name="size"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: 'Chọn size',
+                                },
+                              ]}
+                            >
+                              <Select
+                                style={{ width: '100%', lineHeight: "31px", borderRadius: '20px' }}
+                                allowClear
+                                placeholder="size"
+                              >
+                                <Option value="S">S</Option>
+                                <Option value="M">M</Option>
+                                <Option value="L">L</Option>
+                                <Option value="X">X</Option>
+                                <Option value="XXL">XXL</Option>
                               </Select>
                             </Form.Item>
                           </Card>
@@ -556,24 +521,7 @@ function News() {
                         <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
                           <Card bordered={false} className="criclebox h-full">
                             <Form.Item
-                              name="BuyerStoreId"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: 'Chọn nhà cung cấp',
-                                },
-                              ]}
-                            >
-                              <Select style={{ width: "100%", lineHeight: "31px" }} placeholder="Nhà cung cấp">
-                                <Option value="1">CÔNG TY CỔ PHẦN THỜI TRANG H2T VIỆT NAM</Option>
-                              </Select>
-                            </Form.Item>
-                          </Card>
-                        </Col>
-                        <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
-                          <Card bordered={false} className="criclebox h-full">
-                            <Form.Item
-                              name="Quantity"
+                              name="quantityInStock"
                               rules={[
                                 {
                                   type: "number",
@@ -589,73 +537,24 @@ function News() {
                             </Form.Item>
                           </Card>
                         </Col>
-                      </Row>
-                      <Row gutter={[24, 0]}>
                         <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
                           <Card bordered={false} className="criclebox h-full">
-                            <Form.Item
-                              name="Size"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: 'Chọn size',
-                                },
-                              ]}
-                            >
-                              <Select
-                                style={{ width: '100%', lineHeight: "31px", borderRadius: '20px' }}
-                                mode="multiple"
-                                allowClear
-                                placeholder="Size"
-                              >
-                                <Option value="S">S</Option>
-                                <Option value="M">M</Option>
-                                <Option value="L">L</Option>
-                                <Option value="X">X</Option>
-                                <Option value="XXL">XXL</Option>
-                              </Select>
-                            </Form.Item>
-                          </Card>
-                        </Col>
-                        <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
-                          <Card bordered={false} className="criclebox h-full">
-                            <Upload
-                              accept='.png,.jpg'
-                              status='done'
-                              action={`${API_URL}/upload/cloudinary`}
-                              showUploadList={{ showRemoveIcon: false }}
-                              name='img'
-                              maxCount={1}
-                              onChange={(res) => {
-                                if (res.file.status === 'done') {
-                                  // console.log(res.file.response?.fileName)
-
-                                  setIsDataAdd(pre => {
-                                    return {
-                                      ...pre, Image: res.file.response?.fileName
-                                    }
-                                  })
-                                }
-                              }}
-                            // customRequest={{ status: 'done' }}
+                            <Upload {...addProps}
                             >
                               <Button icon={<UploadOutlined />}>Thêm ảnh (Max:1)</Button>
                             </Upload>
-                            {/* <Button type='primary'>Upload</Button> */}
                           </Card>
                         </Col>
                       </Row>
-
                       <p> Mô tả:
                         <CKEditor
                           editor={ClassicEditor}
-                          data={isDataEdit.Description}
-
+                          data={isDataEdit.desc}
                           onChange={(event, editor) => {
                             const data = editor.getData();
                             setIsDataAdd(pre => {
                               return {
-                                ...pre, Description: data
+                                ...pre, desc: data
                               }
                             })
                           }}
@@ -676,7 +575,7 @@ function News() {
               <div className="table-responsive" >
                 {isLoading ? <Spin /> :
                   <Table
-                    rowKey={dataUserRef.current.map(item => { return (item.Id) })}
+                    rowKey='_id'
                     dataSource={dataUserRef.current}
                     className="ant-border-space"
                     columns={columns}
@@ -698,20 +597,38 @@ function News() {
                   visible={isEditing}
                 >
                   <Row gutter={[24, 0]}>
-
                     <Col xs={24} sm={24} md={12} lg={12} xl={24} className="mb-24">
                       <Card bordered={false} className="criclebox h-full">
-
-                        <Input autoFocus placeholder='Tên sản phẩm'
-                          value={isDataEdit.Name}
+                        <Input autoFocus placeholder={isDataEdit.name}
                           onChange={e =>
                             setIsDataEdit(pre => {
                               return {
-                                ...pre, Name: e.target.value
+                                ...pre, name: e.target.value
                               }
                             })
                           }
                         />
+                      </Card>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={12} xl={24} className="mb-24">
+                      <Card bordered={false} className="criclebox h-full">
+                        <Card bordered={false} className="criclebox h-full">
+                          <Form.Item
+                            name="_id"
+                            rules={[
+                              {
+                                required: true,
+                                message: 'Chọn danh mục',
+                              },
+                            ]}
+                          >
+                            <Select style={{ width: "100%", lineHeight: "31px" }} placeholder="Danh mục">
+                              {categoryRef.current.map(item =>
+                                <Option key={item._id} value={item._id}>{item.category_name}</Option>
+                              )}
+                            </Select>
+                          </Form.Item>
+                        </Card>
                       </Card>
                     </Col>
                   </Row>
@@ -721,145 +638,28 @@ function News() {
                         <InputNumber style={{ width: '100%', lineHeight: "31px", borderRadius: 5 }}
                           placeholder='Nhập giá ban đầu'
                           min={0}
-                          value={isDataEdit.Price}
+                          value={isDataEdit.price}
                           onChange={e =>
                             setIsDataEdit(pre => {
                               return {
-                                ...pre, Price: e?.target?.value
+                                ...pre, price: e?.target?.value
                               }
                             })
                           }
                         />
                       </Card>
                     </Col>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
-                      <Card bordered={false} className="criclebox h-full">
-
-                        <Select style={{ width: "100%", lineHeight: "31px" }}
-                          allowClear
-                          placeholder={`${isDataEdit?.SalePrice / isDataEdit?.Price}`}
-                          defaultValue={isDataEdit.SalePrice / isDataEdit.Price}
-                          onChange={e => {
-                            setIsDataEdit(pre => {
-                              return {
-                                ...pre, SalePrice: e
-                                // * isDataEdit.Price
-                              }
-                            })
-                            // console.log(isDataEdit.SalePrice)
-                          }
-                          }
-                        >
-                          <Option value={1}>0%</Option>
-                          <Option value={0.25}>25%</Option>
-                          <Option value={0.3}>30%</Option>
-                          <Option value={0.5}>50%</Option>
-                          <Option value={0.75}>75%</Option>
-                        </Select>
-                      </Card>
-                    </Col>
-                  </Row>
-                  <Row gutter={[24, 0]}>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
-                      <Card bordered={false} className="criclebox h-full">
-
-                        <Select style={{ width: "100%", lineHeight: "31px" }}
-                          placeholder={isDataEdit.UnitOfMeasureId}
-                          // value={isDataEdit.UnitOfMeasureId}
-                          onChange={e =>
-                            setIsDataEdit(pre => {
-                              return {
-                                ...pre, UnitOfMeasureId: e
-                              }
-                            })
-                          }
-                        >
-                          <Option value={1}>Cái</Option>
-                          <Option value={2}>Chiếc</Option>
-                          <Option value={3}>Bộ</Option>
-                          <Option value={4}>Đôi</Option>
-                        </Select>
-                      </Card>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
-                      <Card bordered={false} className="criclebox h-full">
-
-                        <Select style={{ width: "100%", lineHeight: "31px" }}
-                          placeholder="Please select CategoryId"
-                          value={isDataEdit.CategoryId}
-                          onChange={e =>
-                            setIsDataEdit(pre => {
-                              return {
-                                ...pre, CategoryId: e
-                              }
-                            })
-                          }
-                        >
-                          <Option value="1">Áo Thun</Option>
-                          <Option value="2">Áo Polo</Option>
-                          <Option value="3">Áo Sơ Mi</Option>
-                          <Option value="5">Quần Short</Option>
-                          <Option value="6">Quần Jeans</Option>
-                          <Option value="7">Quần Jogger</Option>
-                          <Option value="8">Quần Kaki</Option>
-                          <Option value="9">Áo Nam</Option>
-                          <Option value="10">Quần Nam</Option>
-                          <Option value="11">Áo Nữ</Option>
-                          <Option value="13">Quần Nữ</Option>
-                        </Select>
-                      </Card>
-                    </Col>
-                  </Row>
-                  <Row gutter={[24, 0]}>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
-                      <Card bordered={false} className="criclebox h-full">
-
-                        <Select style={{ width: "100%", lineHeight: "31px" }}
-                          placeholder="Chọn nhà cung cấp"
-                          value={isDataEdit.BuyerStoreId}
-                          onChange={e =>
-                            setIsDataEdit(pre => {
-                              return {
-                                ...pre, BuyerStoreId: e
-                              }
-                            })
-                          }
-                        >
-                          <Option value="1">CÔNG TY CỔ PHẦN THỜI TRANG H2T VIỆT NAM</Option>
-                        </Select>
-                      </Card>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
-                      <Card bordered={false} className="criclebox h-full">
-
-                        <InputNumber style={{ width: '100%', lineHeight: "40px", borderRadius: 5 }}
-                          placeholder='Nhập số lượng'
-                          min={0} max={200}
-                          value={isDataEdit.Quantity}
-                          onChange={e =>
-                            setIsDataEdit(pre => {
-                              return {
-                                ...pre, Quantity: e?.target?.value
-                              }
-                            })
-                          }
-                        />
-                      </Card>
-                    </Col>
-                  </Row>
-                  <Row gutter={[24, 0]}>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
                       <Card bordered={false} className="criclebox h-full">
                         <Select
                           style={{ width: '100%', lineHeight: "31px", borderRadius: '20px' }}
-                          mode="multiple"
+                          // mode="multiple"
                           allowClear
-                          placeholder={isDataEdit.Color?.join(',')}
-                          // value={isDataEdit.Size?.join(",")}
+                          placeholder={isDataEdit.color}
                           onChange={e =>
                             setIsDataEdit(pre => {
                               return {
-                                ...pre, Color: e
+                                ...pre, color: e
                               }
                             })
                           }
@@ -869,17 +669,23 @@ function News() {
                           <Option value="Xanh">Xanh</Option>
                           <Option value="Đỏ">Đỏ</Option>
                           <Option value="Vàng">Vàng</Option>
-                        </Select><br /><br />
+                        </Select>
+
+                      </Card>
+                    </Col>
+                  </Row>
+                  <Row gutter={[24, 0]}>
+                    <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
+                      <Card bordered={false} className="criclebox h-full">
                         <Select
                           style={{ width: '100%', lineHeight: "31px", borderRadius: '20px' }}
-                          mode="multiple"
+                          // mode="multiple"
                           allowClear
-                          placeholder={isDataEdit.Size?.join(',')}
-                          // value={isDataEdit.Size?.join(",")}
+                          placeholder={isDataEdit.size}
                           onChange={e =>
                             setIsDataEdit(pre => {
                               return {
-                                ...pre, Size: e
+                                ...pre, size: e
                               }
                             })
                           }
@@ -894,47 +700,22 @@ function News() {
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
                       <Card bordered={false} className="criclebox h-full">
-                        <Upload
-                          accept='.png,.jpg'
-                          status='done'
-                          action={`${API_URL}/upload/cloudinary`}
-                          showUploadList={{ showRemoveIcon: false }}
-                          name='img'
-                          maxCount={5}
-                          onChange={(res) => {
-                            if (res.file.status === 'done') {
-                              // console.log(res.file.response?.fileName)
-                              setFileName(pre => {
-                                return [
-                                  ...pre, res.file.response?.fileName,
-                                ]
-                              })
-                              setIsDataEdit(pre => {
-                                return {
-                                  ...pre, Image: [...pre.Image, res.file.response?.fileName]
-                                }
-                              })
-                            }
-                          }}
-                        // customRequest={{ status: 'done' }}
-                        >
+                        <Upload {...props}>
                           <Button icon={<UploadOutlined />}>Thêm ảnh (Max&lt;=5)</Button>
                         </Upload>
-                        {/* <Button type='primary'>Upload</Button> */}
                       </Card>
                     </Col>
                   </Row>
-                  {/* <Input.TextArea showCount rows={20} /> */}
                   <p> Mô tả:
                     <CKEditor
                       editor={ClassicEditor}
-                      data={isDataEdit.Description}
+                      data={isDataEdit.desc}
 
                       onChange={(event, editor) => {
                         const data = editor.getData();
                         setIsDataEdit(pre => {
                           return {
-                            ...pre, Description: data
+                            ...pre, desc: data
                           }
                         })
                       }}

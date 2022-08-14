@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 import './style.css'
 import {
     Row, Col, Card, Table, Button, Upload,
-    Typography, Modal, Input, Select, notification, Spin,
+    Typography, Modal, Input, Select, notification, Spin, Popconfirm,
 } from "antd";
 import { DeleteOutlined, EditOutlined, PlusSquareOutlined, UploadOutlined } from '@ant-design/icons';
 // import { ToTopOutlined } from "@ant-design/icons";
@@ -35,19 +35,18 @@ function Category() {
     const [disabled, setDisabled] = useState(true)
     const [categoryName, setCategoryName] = useState("")
     const fetchData = async () => {
-        const response = await axios.get(`${API_URL}/category/all`)
+        const response = await axios.get(`${API_URL}/categories`)
         if (response && response.data) {
-            setDataUser(response.data.data.data)
+            setDataUser(response.data)
             setIsLoading(false)
             setSuccess(false)
-            // console.log(dataUserRef.current)
         }
     }
     const handleChangeCategoryName = (e) => {
         setCategoryName(e.target.value);
     }
     useEffect(() => {
-        if (categoryName && isAddNew.Code && isAddNew.StatusId) {
+        if (isAddNew.category_name) {
             setDisabled(false)
         }
         else setDisabled(true)
@@ -59,67 +58,21 @@ function Category() {
     const columns = [
         {
             title: "Mã danh mục",
-            dataIndex: "Id",
-            key: "Id",
+            dataIndex: "_id",
+            key: "_id",
             width: 10,
-            sorter: (a, b) => a.Id - b.Id,
-
-            // fixed: 'left'
+            sorter: (a, b) => a._id - b._id,
         },
         {
             title: "Tên danh mục",
-            dataIndex: "Name",
-            key: "Name",
+            dataIndex: "category_name",
+            key: "category_name",
             width: 30,
-            sorter: (a, b) => a.Name.length - b.Name.length,
-            // fixed: 'left'
-        },
-        {
-            title: "Danh mục loại",
-            dataIndex: "Code",
-            key: "Code",
-            width: 30,
-            filters: [
-                {
-                    text: 'Áo',
-                    value: 'ao',
-                },
-                {
-                    text: 'Quần',
-                    value: 'quan',
-                },
-                // {
-                //     text: 'Balo',
-                //     value: 'balo',
-                // },
-                // {
-                //     text: 'Giày',
-                //     value: 'giay',
-                // },
-                // {
-                //     text: 'Khác',
-                //     value: 'khac',
-                // },
-            ],
-            onFilter: (value, record) => record.Code.indexOf(value) === 0,
-        },
-        {
-            title: "Trạng thái",
-            key: "StatusId",
-            width: 50,
-            // dataIndex: "StatusId",
-            render(record) {
-                return (
-                    <div>
-                        {Number(record.StatusId) === 1 ? 'Đang hoạt động' : 'Chưa hoạt động'}
-                    </div>
-                );
-            }
+            sorter: (a, b) => a.category_name.length - b.category_name.length,
         },
         {
             title: "Hành động",
             key: "Action",
-            // fixed: 'right',
             width: 40,
             render(record) {
                 return (
@@ -127,6 +80,9 @@ function Category() {
                         {/* <PlusSquareOutlined onClick={() => BtnAddNew(record)} style={{ color: 'green', cursor: 'pointer', marginRight: 10, fontSize: 20 }} /> */}
                         <EditOutlined onClick={() => BtnModalUpdate(record)} style={{ color: 'aqua', cursor: 'pointer', fontSize: 20 }} />
                         {/* <DeleteOutlined style={{ color: 'red', cursor: 'pointer' }} /> */}
+                        <Popconfirm cancelText="Hủy" okText='Xóa' title="Chắc chắn xóa?" onConfirm={() => BtnDelete(record)}>
+                            <DeleteOutlined style={{ color: 'red', cursor: 'pointer', fontSize: 20, marginRight: 10 }} />
+                        </Popconfirm>
                     </>
                 );
             }
@@ -145,9 +101,10 @@ function Category() {
         setIsDataEdit({})
     }
     const UpdateUser = async () => {
-        await axios.put(`${API_URL}/category/update/${isDataEdit.Id}`, { ...isDataEdit, Image: 'empty.png' }, {
+        await axios.patch(`${API_URL}/category/${isDataEdit._id}`, isDataEdit, {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${localStorage.getItem('token_admin')} `
             }
         })
             .then(() => {
@@ -171,93 +128,55 @@ function Category() {
 
     }
     const AddNewCategory = async () => {
-        await axios.post(`${API_URL}/category/add-new`, { ...isAddNew, Image: 'empty.png' }, {
+        await axios.post(`${API_URL}/create-category`, isAddNew, {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${localStorage.getItem('token_admin')} `
             }
         })
             .then(() => {
                 notification.success({
-                    message: 'Update Success',
+                    message: 'Add Success',
                     description: '',
-                    className: 'update-success'
+                    className: 'Add-success'
                 })
                 setIsLoading(false)
                 setSuccess(true)
             })
             .catch(err => {
                 notification.error({
-                    message: 'Update Error' + err,
+                    message: 'Add Error' + err,
                     description: '',
-                    className: 'update-error'
+                    className: 'Add-error'
                 })
                 setSuccess(false)
             })
         console.log(isAddNew)
     }
-    // const uploadCloud = () => {
-    //     cloudinaryUpload();
-    // }
-    const [fileInputState, setFileInputState] = useState('')
-    const [previewSource, setPreviewSource] = useState('')
-    const [selectedFile, setSelectedFile] = useState('');
-    const [fileName, setFileName] = useState('');
-    const handleFileUpload = (e) => {
-        const uploadData = new FormData();
-        uploadData.append("img", e.target.files[0], e.target.files[0].name);
-        axios.post(API_URL + '/upload/cloudinary', uploadData, {
+    const BtnDelete = async (record) => {
+        await axios.delete(`${API_URL}/category/${record._id}`, {
             headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })
-            .then(res => {
-                setFileName(res.data.fileName)
-                console.log(fileName)
-            }
-            )
-            .catch(err => console.log(err))
-        console.log(e.target.files[0].name)
-        // const file = e.target.files[0];
-        // previewFile(file);
-        // setSelectedFile(file);
-        // setFileInputState(e.target.value);
-
-
-    }
-    const previewFile = file => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-            setPreviewSource(reader.result)
-        }
-    }
-    const handleSubmitFile = (e) => {
-        e.preventDefault();
-        if (!selectedFile) return;
-        const reader = new FileReader();
-        reader.readAsDataURL(selectedFile);
-        reader.onloadend = () => {
-            uploadImage(reader.result)
-        }
-        reader.onerror = () => {
-            console.log('Error');
-        }
-    }
-    const uploadImage = async (image) => {
-        await axios.post('http://localhost:5000/api/v1/upload/cloudinary', JSON.stringify({ data: image }), {
-            headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'multipart/form-data'
+                'Authorization': `Bearer ${localStorage.getItem('token_admin')}`
             }
         })
             .then(() => {
-                setFileInputState('');
-                setPreviewSource('');
+                notification.success({
+                    message: 'Delete Success!',
+                    description: '',
+                    className: "delete-success"
+                })
+                setSuccess(state => !state)
             })
             .catch(err => {
-                console.log(err)
+                notification.success({
+                    message: 'Delete Failed:  ' + err,
+                    description: '',
+                    className: "delete-error"
+                })
             })
     }
+
+
     return (
         <>
             <div className="tabled">
@@ -299,49 +218,17 @@ function Category() {
 
                                     >
                                         <label> Tên danh mục:
-                                            <Input value={isAddNew.Name} autoFocus required placeholder='Tên danh mục'
+                                            <Input value={isAddNew.category_name} autoFocus required placeholder='Tên danh mục'
                                                 onChange={e => {
                                                     handleChangeCategoryName(e)
                                                     setIsAddNew(pre => {
                                                         return {
-                                                            ...pre, Name: e.target.value
+                                                            ...pre, category_name: e.target.value
                                                         }
                                                     })
                                                 }
                                                 } />
                                         </label><br /><br />
-                                        <Select
-                                            value={isAddNew.Code}
-                                            style={{ width: 160 }}
-                                            placeholder="Danh mục loại"
-                                            onChange={(e) => {
-                                                setIsAddNew(pre => {
-                                                    return { ...pre, Code: e ? e : 'ao' }
-                                                })
-                                            }}
-                                        >
-                                            <Option value="ao">Áo</Option>
-                                            <Option value="quan">Quần</Option>
-                                            {/* <Option value="balo">Balo</Option> */}
-                                            {/* <Option value="giay">Giày</Option> */}
-                                            {/* <Option value="khac">Khác</Option> */}
-
-                                        </Select> &emsp;
-                                        <Select
-                                            defaultValue={isAddNew.StatusId}
-                                            value={isAddNew.StatusId}
-                                            style={{ width: 160 }}
-                                            placeholder="Trạng thái"
-                                            onChange={(e) => {
-                                                setIsAddNew(pre => {
-                                                    return { ...pre, StatusId: e }
-                                                })
-                                            }}
-                                        >
-                                            <Option value="1">Đang hoạt động</Option>
-                                            <Option value="2">Chưa hoạt động</Option>
-
-                                        </Select>
                                     </Modal>
                                 </>
                             }
@@ -349,12 +236,11 @@ function Category() {
                             <div className="table-responsive" >
                                 {isLoading ? <Spin /> :
                                     <Table
-                                        rowKey={dataUserRef.current.map(item => { return (item.Id) })}
+                                        rowKey='_id'
                                         columns={columns}
                                         dataSource={dataUserRef.current}
                                         pagination={{ pageSize: 5 }}
                                         className="ant-border-space"
-                                    // scroll={{ x: 1300 }}
                                     />
                                 }
 
@@ -371,49 +257,19 @@ function Category() {
                                     onOk={() => {
                                         UpdateUser();
                                         resetModal();
-                                        // console.log(isDataEdit)
                                     }}
                                 >
                                     <label> Tên danh mục:
                                         <Input placeholder='Fill in Category Name'
-                                            value={isDataEdit.Name}
+                                            value={isDataEdit.category_name}
                                             onChange={e =>
                                                 setIsDataEdit(pre => {
                                                     return {
-                                                        ...pre, Name: e.target.value
+                                                        ...pre, category_name: e.target.value
                                                     }
                                                 })
                                             } />
-                                    </label><br /><br />
-                                    <Select
-                                        style={{ width: 160 }}
-                                        placeholder="Chọn danh mục loại"
-                                        onChange={(e) => {
-                                            setIsDataEdit(pre => {
-                                                return { ...pre, Code: e }
-                                            })
-                                        }}
-                                    >
-                                        <Option value="ao">Áo</Option>
-                                        <Option value="quan">Quần</Option>
-                                        {/* <Option value="balo">Balo</Option> */}
-                                        {/* <Option value="giay">Giày</Option> */}
-                                        {/* <Option value="khac">Khác</Option> */}
-
-                                    </Select> &emsp;
-                                    <Select
-                                        style={{ width: 160 }}
-                                        placeholder="Trang thái"
-                                        onChange={(e) => {
-                                            setIsDataEdit(pre => {
-                                                return { ...pre, StatusId: e }
-                                            })
-                                        }}
-                                    >
-                                        <Option value="1">Đang hoạt động</Option>
-                                        <Option value="2">Chưa hoạt động</Option>
-
-                                    </Select>
+                                    </label>
                                 </Modal>
                             </div>
                         </Card>

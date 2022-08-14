@@ -11,6 +11,13 @@ import { State } from "../../redux/reducers";
 import { ProductInCart } from "../../types/cart.types";
 import ProductItem from "./ProductItem";
 import {
+  deleteItemInCart,
+  getCart,
+  updateCart,
+} from "../../redux/action/cartAction";
+import { State } from "../../redux/reducers";
+import ProductItem from "./ProductItem";
+import {
   Bottom,
   Details,
   Info,
@@ -77,7 +84,7 @@ const CartPage = () => {
           </Info>
           <Summary>
             <SummaryTitle>ORDER SUMMARY</SummaryTitle>
-            
+
             <SummaryItem type={""}>
               <SummaryItemText>Estimated Shipping</SummaryItemText>
               <SummaryItemPrice>{formatMoney(10000)}</SummaryItemPrice>

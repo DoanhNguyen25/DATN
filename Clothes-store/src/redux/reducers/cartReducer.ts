@@ -44,7 +44,7 @@ export const cartReducer = (
       return {
         ...state,
         message: "thành công",
-        productInCart:action.payload
+        productInCart: action.payload
       };
     case REMOVE_ITEM:
       return {

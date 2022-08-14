@@ -10,7 +10,7 @@ import SignIn from "./pages/SignIn";
 import Main from "./components/layout/Main";
 import Users from "./pages/Users";
 
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
 import Category from "./pages/Category";
@@ -31,7 +31,7 @@ function App() {
           <Route exact path="/Hóa đơn" component={Billing} />
           <Route exact path="/rtl" component={Rtl} />
           <Route exact path="/profile" component={Profile} />
-          <Redirect from="*" to="/Thống kê" />
+          {/* <Redirect from="*" to="/Thống kê" /> */}
         </Main>
       </Switch>
     </div>
