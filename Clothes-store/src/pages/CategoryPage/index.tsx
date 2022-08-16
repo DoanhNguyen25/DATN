@@ -23,17 +23,26 @@ import {
 const CategoryPage = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [color, setColor] = useState<string>("");
+  const [size, setSize] = useState<string>("");
+  const [sort, setSort] = useState<string>("newest");
   const { id } = useParams();
 
+  if (sort.split(" ")[1] === "desc") {
+    setSort(`-${sort.split(" ")[0]}`);
+  }
+  if (sort == "newest") {
+    setSort("createdAt");
+  }
   useEffect(() => {
     const getProduct = async () => {
       try {
         const req = await GetProductByCategory(
-          `http://localhost:8000/api/product2/${id}`
+          `http://localhost:8000/api/product2/${id}?sort=${sort}&color=${color}`
         );
 
         if (req.data) {
-          setProducts(req.data);
+          setProducts(req.data.products);
           setIsLoading(false);
         }
       } catch (error) {
@@ -41,7 +50,7 @@ const CategoryPage = () => {
       }
     };
     getProduct();
-  }, [id]);
+  }, [id, sort, color]);
   return (
     <MainLayout>
       <CategoryPageWrapper>
@@ -49,8 +58,10 @@ const CategoryPage = () => {
         <FilterContainer>
           <Filter>
             <FilterText>Filter Products:</FilterText>
-            <Select>
-              <Option>Color</Option>
+            <Select onChange={(e) => setColor(e.target.value.toLowerCase())}>
+              <Option disabled selected>
+                Color
+              </Option>
               <Option>White</Option>
               <Option>Black</Option>
               <Option>Red</Option>
@@ -71,10 +82,10 @@ const CategoryPage = () => {
           </Filter>
           <Filter>
             <FilterText>Sort Products:</FilterText>
-            <Select>
+            <Select onChange={(e) => setSort(e.target.value.toLowerCase())}>
               <Option selected>Newest</Option>
-              <Option>Price (asc)</Option>
-              <Option>Price (desc)</Option>
+              <Option>Price asc</Option>
+              <Option>Price desc</Option>
             </Select>
           </Filter>
         </FilterContainer>

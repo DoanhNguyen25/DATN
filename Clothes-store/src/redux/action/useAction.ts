@@ -1,8 +1,6 @@
 import React, { Dispatch } from "react";
-import axiosClient from "../../constants/instance";
 import { UserAction } from "../../types/user.types";
 import { toast } from "react-toastify";
-import axios from "axios";
 
 import {
   USER_LOGIN_FAIL,
@@ -33,9 +31,8 @@ export const login =
           type: USER_LOGIN_SUCCESS,
           payload: req.data,
         });
-
+        localStorage.setItem("userInfo", JSON.stringify(req.data));
         localStorage.setItem("access", JSON.stringify(req.data.access_token));
-        
       }
       toast.success("Đăng nhập thành công");
     } catch (error) {

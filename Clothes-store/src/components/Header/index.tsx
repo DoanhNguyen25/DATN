@@ -20,8 +20,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { State } from "../../redux/reducers";
 import { logout } from "../../redux/action/useAction";
 import { getCart } from "../../redux/action/cartAction";
+import { GetUserInfo } from "../../api/UserApi";
+import { UserInfo } from "../../types/user.types";
+import axios from "axios";
 const Header = () => {
   const [wordEnter, setWordEnter] = useState<string>("");
+  const [categories, setCategories] = useState<any>([]);
   const [isOpen, setIsOpen] = useState<Boolean>(false);
   const userInfo = useSelector((state: State) => state.userReducer.userInfo);
   const cart = useSelector((state: State) => state.cartReducer.productInCart);
@@ -36,6 +40,10 @@ const Header = () => {
   const clearInput = () => {
     setWordEnter("");
   };
+
+  const userInfoFromStorage: UserInfo = localStorage.getItem("userInfo")
+    ? JSON.parse(localStorage.getItem("userInfo") + "")
+    : undefined;
 
   const handleLogout = () => {
     dispatch(logout());
@@ -56,6 +64,18 @@ const Header = () => {
 
   useEffect(() => {
     dispatch(getCart());
+    const getCategory = async () => {
+      try {
+        const req = await axios.get("http://localhost:8000/api/categories");
+        if (req.data) {
+          setCategories(req.data);
+        }
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    };
+
+    getCategory();
   }, []);
 
   return (
@@ -72,12 +92,14 @@ const Header = () => {
             <li>
               Sản Phẩm
               <ul className="navbar__submenu">
-                <li>
-                  <Link to={"/category/1"}>Áo</Link>
-                </li>
-                <li>
-                  <Link to={"/category/1"}>Quần</Link>
-                </li>
+                {categories &&
+                  categories.map((category: any) => (
+                    <li key={category._id}>
+                      <Link to={`/category/${category._id}`}>
+                        {category.category_name}
+                      </Link>
+                    </li>
+                  ))}
                 <li>
                   <Link to={"/category/1"}>Túi</Link>
                 </li>
@@ -123,8 +145,8 @@ const Header = () => {
           </MenuItem>
 
           <MenuItem isOpen={isOpen}>
-            {isLoggedIn ? (
-              <div onClick={toggleUserMenu}>{userInfo.username}</div>
+            {userInfoFromStorage ? (
+              <div onClick={toggleUserMenu}>{userInfoFromStorage.username}</div>
             ) : (
               <Link to={"/login"}>
                 <AccountCircleIcon color="action" />
@@ -135,7 +157,9 @@ const Header = () => {
               <div className="user__menu--item">
                 <Link to={"/user-profile"}>Thông tin tài khoản</Link>
               </div>
-              <div className="user__menu--item">Lịch sử đặt hàng</div>
+              <div className="user__menu--item">
+                <Link to={"/order-history"}>Lịch sử đặt hàng</Link>
+              </div>
               <div className="user__menu--item" onClick={handleLogout}>
                 Đăng xuất
               </div>

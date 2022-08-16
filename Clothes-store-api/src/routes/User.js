@@ -35,7 +35,7 @@ router.get("/api/users", async (req, res) => {
   try {
     const user = await User.find({});
     res.status(200).send(user);
-  } catch (error) { }
+  } catch (error) {}
 });
 
 // api get user info
@@ -68,7 +68,6 @@ router.get("/api/user/:id", auth.verifyToken, async (req, res) => {
 // api edit user
 router.patch("/api/user/:id", auth.verifyToken, async (req, res) => {
   const updates = Object.keys(req.body);
-  console.log(req.body);
   const allowedUpdates = [
     "username",
     "email",

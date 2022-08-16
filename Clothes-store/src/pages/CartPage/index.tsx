@@ -6,10 +6,7 @@ import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { formatMoney } from "../../components/Functions";
 import MainLayout from "../../layouts/MainLayout";
-import { deleteItemInCart, updateCart } from "../../redux/action/cartAction";
-import { State } from "../../redux/reducers";
 import { ProductInCart } from "../../types/cart.types";
-import ProductItem from "./ProductItem";
 import {
   deleteItemInCart,
   getCart,
