@@ -5,7 +5,18 @@ export const CategoryPageWrapper = styled.div`
     padding: 20px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between; 
+    justify-content: space-between;
+  }
+
+  .load__more--btn {
+    width: 10%;
+    padding: 1rem;
+    background: teal;
+    text-transform: uppercase;
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #fff;
   }
 `;
 export const Title = styled.h1`

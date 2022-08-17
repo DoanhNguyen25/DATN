@@ -24,33 +24,35 @@ const CategoryPage = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [color, setColor] = useState<string>("");
-  const [size, setSize] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [size, setSize] = useState<number>(3);
   const [sort, setSort] = useState<string>("newest");
   const { id } = useParams();
 
-  if (sort.split(" ")[1] === "desc") {
-    setSort(`-${sort.split(" ")[0]}`);
+  if (sort?.split(" ")[1] === "desc") {
+    setSort(`-${sort?.split(" ")[0]}`);
   }
   if (sort == "newest") {
     setSort("createdAt");
   }
-  useEffect(() => {
-    const getProduct = async () => {
-      try {
-        const req = await GetProductByCategory(
-          `http://localhost:8000/api/product2/${id}?sort=${sort}&color=${color}`
-        );
 
-        if (req.data) {
-          setProducts(req.data.products);
-          setIsLoading(false);
-        }
-      } catch (error) {
+  const getProduct = async () => {
+    try {
+      const req = await GetProductByCategory(
+        `http://localhost:8000/api/product2/${id}?page=${page}&size=${size}&sort=${sort}&color=${color}`
+      );
+
+      if (req.data) {
+        setProducts(req.data.products);
         setIsLoading(false);
       }
-    };
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
     getProduct();
-  }, [id, sort, color]);
+  }, [id, sort, color, size]);
   return (
     <MainLayout>
       <CategoryPageWrapper>
@@ -89,34 +91,46 @@ const CategoryPage = () => {
             </Select>
           </Filter>
         </FilterContainer>
-        <div className="list__product">
-          {isLoading ? (
-            <div className="list__product--loading">
-              <CircularProgress />
-            </div>
-          ) : products?.length > 0 ? (
-            products.map((meal) => <Product item={meal} key={meal._id} />)
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                width: "100%",
-                flexDirection: "column",
-                alignItems: "center",
-                padding: "2rem 0rem",
-                minHeight: "20rem",
-                fontFamily: '"Roboto Mono", monospace',
-              }}
-            >
-              <SentimentVeryDissatisfiedIcon
-                style={{ color: "teal", fontSize: "4.5rem" }}
-              />
-              <br />
-              <div style={{ fontSize: "2rem" }}>Không tồn tại sản phẩm !! </div>
-            </div>
-          )}
+        <div>
+          <div className="list__product">
+            {isLoading ? (
+              <div className="list__product--loading">
+                <CircularProgress />
+              </div>
+            ) : products?.length > 0 ? (
+              products.map((meal) => <Product item={meal} key={meal._id} />)
+            ) : (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: "2rem 0rem",
+                  minHeight: "20rem",
+                  fontFamily: '"Roboto Mono", monospace',
+                }}
+              >
+                <SentimentVeryDissatisfiedIcon
+                  style={{ color: "teal", fontSize: "4.5rem" }}
+                />
+                <br />
+                <div style={{ fontSize: "2rem" }}>
+                  Không tồn tại sản phẩm !!{" "}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div
+            className="load__more--btn"
+            onClick={() => setSize((pre) => pre + 3)}
+          >
+            Load more
+          </div>
         </div>
+
         <Newsletter />
       </CategoryPageWrapper>
     </MainLayout>

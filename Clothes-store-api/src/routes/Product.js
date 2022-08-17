@@ -24,15 +24,14 @@ router.post(
 // sort
 // search
 router.get("/api/products", async (req, res) => {
-  const total = await Product.countDocuments({});
-
   try {
     const features = new APIfeatures(Product.find(), req.query)
       .paginating()
       .sorting()
-      .searching()
+      .searching();
 
     const products = await features.query;
+    const total = await Product.countDocuments();
 
     res.status(200).send({
       products: products,
@@ -188,14 +187,22 @@ router.delete("/api/comment/:commentId", auth.verifyToken, async (req, res) => {
     const commentSelected = await Comment.findOne({ commentId });
     const productPresent = await Product.findById(commentSelected.product);
     // console.log(productPresent);
-    const commentIndex = productPresent.reviews.findIndex((review) => {
-      review._id === req.params.commentId;
-    });
-
-    productPresent.reviews.splice(commentIndex, 1);
-    await productPresent.save();
-    await commentSelected.remove();
-    res.status(200).send({ message: "xóa bình luận thành công!!" });
+    let commentIndex = 0;
+    for (let i = 0; i < productPresent.reviews.length; i++) {
+      if (productPresent.reviews[i].comment === commentSelected.comment) {
+        commentIndex = i;
+      }
+    }
+    if (commentIndex > -1) {
+      productPresent.reviews.splice(commentIndex, 1);
+      await commentSelected.remove();
+      await productPresent.save();
+      return res.status(200).send({ message: "xóa bình luận thành công!!" });
+    } else {
+      return res
+        .status(400)
+        .send({ message: "xóa bình luận không thành công!!" });
+    }
   } catch (error) {
     res.status(500).send({ message: error.message });
   }

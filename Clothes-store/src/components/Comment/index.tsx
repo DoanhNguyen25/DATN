@@ -29,14 +29,22 @@ const Comment = ({ comment }: any) => {
         <br />
         <button onClick={handleComment}>Bình luận</button>
 
-        <div>{a.comments?.length} Bình Luận</div>
+        <div>
+          {
+            a.comments.filter((comment: any) => comment.product === productId)
+              ?.length
+          }{" "}
+          Bình Luận
+        </div>
       </div>
       {a.comments &&
-        a.comments.map((review: any) => (
-          <div key={review._id}>
-            <Evaluate value={review} />
-          </div>
-        ))}
+        a.comments
+          .filter((comment: any) => comment.product === productId)
+          .map((review: any) => (
+            <div key={review._id}>
+              <Evaluate value={review} />
+            </div>
+          ))}
     </CommentWrapper>
   );
 };
