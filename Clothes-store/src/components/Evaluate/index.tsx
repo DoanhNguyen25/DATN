@@ -1,10 +1,11 @@
 import React from "react";
 import { EvaluateWrapper } from "./style";
 import moment from "moment";
-// import "moment/locale/vi";
+import "moment/locale/vi";
 // moment.locale("vi");
 
 const Evaluate = ({ value }: any) => {
+  console.log(value)
   return (
     <EvaluateWrapper>
       <div className="evaluate__info">

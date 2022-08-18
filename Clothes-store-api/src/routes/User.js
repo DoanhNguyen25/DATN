@@ -5,7 +5,7 @@ const router = new express.Router();
 const { upload } = require("../utils/updloadfile/upload");
 const { cloudinary } = require("../utils/storage/cloudinary");
 const { mailTransporter } = require("../utils/email/sendmail");
-const { Comment } = require("../models/Product");
+const { Comment, Product } = require("../models/Product");
 
 // create user
 router.post("/api/user/create", upload.single("image"), async (req, res) => {
@@ -150,7 +150,7 @@ router.post("/api/sendmail", async (req, res) => {
 router.get("/api/stats", auth.verifyTokenAndAuthorization, async (req, res) => {
   const date = new Date();
   const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
-
+  
   try {
     const data = await User.aggregate([
       {
@@ -176,6 +176,41 @@ router.get("/api/stats", auth.verifyTokenAndAuthorization, async (req, res) => {
     res.status(500).send(error);
   }
 });
+
+// api enumeration
+router.get("/api/test/stats", async (req, res) => {
+
+  const date = new Date();
+  const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
+
+  // console.log(specificMonth)
+
+  try {
+    const data =  await Product.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: lastYear },
+        },
+      },
+      {
+        $project: {
+          month: { $month: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: "$month",
+          totalProducts: { $sum: 1 },
+        },
+      },
+  ])
+
+  res.send(data)
+  } catch (error) {
+    res.status(500).send(error.message)
+  }
+})
+
 
 // upload img
 router.post(

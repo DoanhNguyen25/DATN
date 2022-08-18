@@ -4,6 +4,12 @@ const auth = require("../middleware/auth");
 const { Cart } = require("../models/Cart");
 const { Order } = require("../models/Order");
 
+
+const getTotal = (products) => {
+  return products.reduce((prev, curr) => {
+    return prev + (curr.quantity * curr.price)
+  },0)
+}
 // CREATE ORDER
 router.post("/api/create-order", auth.verifyToken, async (req, res) => {
   const { fullname, address, phone, email, status } = req.body;
@@ -22,6 +28,7 @@ router.post("/api/create-order", auth.verifyToken, async (req, res) => {
         status: status,
         address: address,
         fullname: fullname,
+        bill:getTotal(cart.products)
       });
 
       await order.save();

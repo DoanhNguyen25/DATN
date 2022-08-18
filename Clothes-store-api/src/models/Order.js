@@ -34,6 +34,7 @@ const OrderSchema = new mongoose.Schema(
     status: { type: Number, default: 0 },
     phone: { type: String, require: true },
     email: { type: String, require: true },
+    bill:{type:Number, default:0}
   },
   { timestamps: true }
 );

@@ -4,8 +4,8 @@ import React, { Dispatch, useCallback, useEffect, useState } from "react";
 import Comment from "../../components/Comment";
 import Newsletter from "../../components/Newsletter";
 import MainLayout from "../../layouts/MainLayout";
-import Lightbox from "react-image-lightbox";
-import "react-image-lightbox/style.css";
+// import Lightbox from "react-image-lightbox";
+// import "react-image-lightbox/style.css";
 
 import {
   AddContainer,
@@ -152,7 +152,7 @@ const ProductPage = () => {
         </InfoContainer>
       </Wrapper>
 
-      {isOpen && (
+      {/* {isOpen && (
         <Lightbox
           mainSrc={images[photoIndex]}
           nextSrc={images[(photoIndex + 1) % images.length]}
@@ -165,7 +165,7 @@ const ProductPage = () => {
             setPhotoIndex((photoIndex + 1) % images.length)
           }
         />
-      )}
+      )} */}
 
       <Comment comment={product && product?.reviews} />
       <Newsletter />
