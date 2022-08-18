@@ -131,14 +131,7 @@ const SignIn = () => {
                   <Input type="password" placeholder="Mật khẩu" />
                 </Form.Item>
 
-                <Form.Item
-                  name="remember"
-                  className="aligin-center"
-                  valuePropName="checked"
-                >
-                  <Switch defaultChecked value={true} onChange={(e) => onChange(e)} />
-                  Lưu tài khoản
-                </Form.Item>
+                
 
                 <Form.Item>
                   <Button

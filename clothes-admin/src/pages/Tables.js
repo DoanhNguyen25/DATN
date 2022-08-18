@@ -166,7 +166,7 @@ function News() {
       render(record) {
         return (
           <>
-            {record.categories.category_name}
+            {record.categories?.category_name}
           </>
         );
       }
@@ -462,11 +462,11 @@ function News() {
                                 },
                                 {
                                   required: true,
-                                  message: 'Nhập giá ban đầu',
+                                  message: 'Nhập giá',
                                 },
                               ]}
                             >
-                              <InputNumber style={{ width: '100%', lineHeight: "31px", borderRadius: 5 }} placeholder='Giá ban đầu' />
+                              <InputNumber style={{ width: '100%', lineHeight: "31px", borderRadius: 5 }} placeholder='Giá' />
                             </Form.Item>
                           </Card>
                         </Col>
@@ -485,7 +485,7 @@ function News() {
                             >
                               <Select style={{ width: "100%", lineHeight: "31px" }} placeholder="Danh mục">
                                 {categoryRef.current.map(item =>
-                                  <Option key={item._id} value={item._id}>{item.category_name}</Option>
+                                  <Option key={item._id} value={item._id}>{item?.category_name}</Option>
                                 )}
                               </Select>
                             </Form.Item>
