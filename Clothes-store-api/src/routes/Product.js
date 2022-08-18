@@ -184,7 +184,7 @@ router.post("/api/comment/:id", auth.verifyToken, async (req, res) => {
 router.delete("/api/comment/:commentId", auth.verifyToken, async (req, res) => {
   const commentId = req.params.commentId;
   try {
-    const commentSelected = await Comment.findById({ commentId });
+    const commentSelected = await Comment.findOne({ commentId });
     const productPresent = await Product.findById(commentSelected.product);
     // console.log(productPresent);
     let commentIndex = 0;

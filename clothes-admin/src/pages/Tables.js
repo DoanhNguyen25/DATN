@@ -166,7 +166,7 @@ function News() {
       render(record) {
         return (
           <>
-            {record.categories.category_name}
+            {record.categories?.category_name}
           </>
         );
       }
@@ -485,7 +485,7 @@ function News() {
                             >
                               <Select style={{ width: "100%", lineHeight: "31px" }} placeholder="Danh mục">
                                 {categoryRef.current.map(item =>
-                                  <Option key={item._id} value={item._id}>{item.category_name}</Option>
+                                  <Option key={item._id} value={item._id}>{item?.category_name}</Option>
                                 )}
                               </Select>
                             </Form.Item>
