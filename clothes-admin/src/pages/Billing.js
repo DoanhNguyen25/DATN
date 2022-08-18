@@ -51,11 +51,12 @@ function Billing() {
   }, [success, isLoading])
 
   const handleChangeStatus = async (record, e) => {
-    const dataStatus = { Id: record.Id, StatusId: e }
+    const dataStatus = { status: e }
     // update-bill
-    await axios.put(`${API_URL}/bill/update-bill`, dataStatus, {
+    await axios.patch(`${API_URL}/order/${record._id}`, dataStatus, {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token_admin')}`
       }
     })
       .then(() => {
@@ -86,8 +87,8 @@ function Billing() {
     },
     {
       title: "Khách hàng",
-      dataIndex: "username",
-      key: "username",
+      dataIndex: "fullname",
+      key: "fullname",
       width: 30,
       // sorter: (a, b) => a.Name.length - b.Name.length,
       // fixed: 'left'
@@ -100,8 +101,8 @@ function Billing() {
     },
     {
       title: "Số điện thoại",
-      dataIndex: "phoneNumber",
-      key: "phoneNumber",
+      dataIndex: "phone",
+      key: "phone",
       width: 50,
     },
     {
@@ -118,38 +119,31 @@ function Billing() {
     },
     {
       title: "Trạng thái",
-      key: "StatusId",
+      key: "status",
       width: 100,
-      // dataIndex: "StatusId",
+      // dataIndex: "status",
       render(record) {
         return (
           <div>
-            {/* {Number(record.StatusId) === 3 ? 'Đang chờ' : (Number(record.StatusId) === 4 ? 'Đã duyệt' : 'Đã hủy')} */}
-            <Select defaultValue={3} value={Number(record.StatusId) === 3 ? 'Đang chờ' : (Number(record.StatusId) === 4 ? 'Đã duyệt' : 'Đã hủy')} onChange={(e) => {
+            {/* {Number(record.status) === 3 ? 'Đang chờ' : (Number(record.status) === 4 ? 'Đã duyệt' : 'Đã hủy')} */}
+            <Select defaultValue={0} value={Number(record.status) === 0 ? 'Đang chờ' : (Number(record.status) === 1 ? 'Đã duyệt' : 'Đã hủy')} onChange={(e) => {
               // setIsDataEdit({
               //   Id: record.Id,
-              //   StatusId: e
+              //   status: e
               // })
               // console.log({
               //   Id: record.Id,
-              //   StatusId: e
+              //   status: e
               // })
               handleChangeStatus(record, e);
             }}>
-              <Option value={3}>Đang chờ</Option>
-              <Option value={4}>Đã duyệt</Option>
-              <Option value={5}>Đã hủy</Option>
+              <Option value={0}>Đang chờ</Option>
+              <Option value={1}>Đã duyệt</Option>
+              <Option value={3}>Đã hủy</Option>
             </Select>
           </div>
         );
       }
-
-    },
-    {
-      title: "Phương thức vận chuyển",
-      key: "TransformMethod",
-      width: 100,
-      dataIndex: "TransformMethod",
 
     },
     {

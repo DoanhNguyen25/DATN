@@ -462,11 +462,11 @@ function News() {
                                 },
                                 {
                                   required: true,
-                                  message: 'Nhập giá ban đầu',
+                                  message: 'Nhập giá',
                                 },
                               ]}
                             >
-                              <InputNumber style={{ width: '100%', lineHeight: "31px", borderRadius: 5 }} placeholder='Giá ban đầu' />
+                              <InputNumber style={{ width: '100%', lineHeight: "31px", borderRadius: 5 }} placeholder='Giá' />
                             </Form.Item>
                           </Card>
                         </Col>

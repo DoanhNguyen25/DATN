@@ -27,7 +27,7 @@ function App() {
           <Route exact path="/Sản phẩm" component={Tables} />
           <Route exact path="/Người dùng" component={Users} />
           <Route exact path="/Danh mục" component={Category} />
-          <Route exact path="/Tin tức" component={News} />
+          <Route exact path="/Bình luận" component={News} />
           <Route exact path="/Hóa đơn" component={Billing} />
           <Route exact path="/rtl" component={Rtl} />
           <Route exact path="/profile" component={Profile} />

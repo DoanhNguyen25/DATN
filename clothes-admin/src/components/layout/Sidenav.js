@@ -158,16 +158,16 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item>
         <Menu.Item key="7">
-          <NavLink to="/Tin tức">
+          <NavLink to="/Bình luận">
             <span
               className="icon"
               style={{
-                background: page === "Tin tức" ? color : "",
+                background: page === "Bình luận" ? color : "",
               }}
             >
               <BookOutlined />
             </span>
-            <span className="label">Quản lý tin tức</span>
+            <span className="label">Quản lý bình luận</span>
           </NavLink>
         </Menu.Item>
         {role &&
