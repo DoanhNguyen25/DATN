@@ -27,18 +27,18 @@ function Home() {
   const { Title } = Typography;
   const [dataUser, setDataUser, dataUserRef] = useStateRef([])
   const [category, setCategory, categoryRef] = useStateRef([])
-  const [dashboard, setDashboard, dashboardRef] = useStateRef([])
+  const [dashboard, setDashboard, dashboardRef] = useStateRef({})
   const [isLoading, setIsLoading] = useState(true)
   const [monthOrder, setMonth] = useState(new Date().getMonth() + 1)
 
 
   const fetchData = async () => {
-    // const dash = await axios.get(`${API_URL}/dashboard/all/${monthOrder}`)
+    const dash = await axios.get(`${API_URL}/dashboard`)
     const response = await axios.get(`${API_URL}/products`)
     const res = await axios.get(`${API_URL}/categories`)
-    // if (dash && dash.data) {
-    //   setDashboard(dash)
-    // }
+    if (dash && dash.data) {
+      setDashboard(dash.data)
+    }
     if (response && response.data) {
       setDataUser(response.data.products)
       setIsLoading(false)
@@ -139,29 +139,25 @@ function Home() {
   const count = [
     {
       today: "Tổng sản phầm",
-      // title: dashboardRef.current?.TotalProduct,
-      title: 1,
+      title: dashboardRef.current?.dataProduct?.find(item => item._id === Number(monthOrder))?.totalProduct || 0,
       icon: dollor,
       bnb: "bnb2",
     },
     {
       today: "Tổng đơn hàng",
-      title: 1,
-      // title: dashboardRef.current?.TotalOrder,
+      title: dashboardRef.current?.dataOrder?.find(item => item._id === Number(monthOrder))?.totalOrder || 0,
       icon: profile,
       bnb: "bnb2",
     },
     {
       today: "Tài khoản",
-      title: '+' + 1,
-      // title: '+' + dashboardRef.current?.TotalAccount,
+      title: `+ ${dashboardRef.current?.dataUser?.find(item => item._id === Number(monthOrder))?.totalUsers || 0}`,
       icon: heart,
       bnb: "redtext",
     },
     {
       today: "Doanh thu",
-      title: Format(1),
-      // title: Format(dashboardRef.current?.TotalRevenues),
+      title: Format(dashboardRef.current?.dataRevenue?.find(item => item._id === Number(monthOrder))?.totalAmount || 0),
       icon: cart,
       bnb: "bnb2",
     },
