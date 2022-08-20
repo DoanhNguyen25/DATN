@@ -233,7 +233,7 @@ function Home() {
       render(record) {
         return (
           <>
-            {record.categories.category_name}
+            {record.categories?.category_name}
           </>
         );
       }

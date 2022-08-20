@@ -1,23 +1,14 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react';
 
-import './style.css'
-import {
-    Row, Col, Card, Table, Button,
-    Typography, Modal, Input, Select, notification, Spin, Drawer, Form,
-} from "antd";
-import { DeleteOutlined, EditOutlined, PlusSquareOutlined, SearchOutlined } from '@ant-design/icons';
-import { useHistory } from "react-router-dom";
-import { API_URL } from '../api/API_URL'
+import { EditOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Drawer, Form, Input, Modal, notification, Row, Select, Spin, Table, Typography } from "antd";
 import axios from 'axios';
+import { useHistory } from "react-router-dom";
 import useStateRef from 'react-usestateref';
-import face from "../assets/images/face-1.jpg";
-import face2 from "../assets/images/face-2.jpg";
-import face3 from "../assets/images/face-3.jpg";
-import face4 from "../assets/images/face-4.jpg";
-import face5 from "../assets/images/face-5.jpeg";
-import face6 from "../assets/images/face-6.jpeg";
+import { API_URL } from '../api/API_URL';
+import './style.css';
 
 const { Title } = Typography;
 const { Option } = Select
