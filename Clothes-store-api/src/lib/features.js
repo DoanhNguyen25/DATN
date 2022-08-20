@@ -42,7 +42,7 @@ function APIfeatures(query, queryString, params) {
     } else {
       this.query = this.query.find();
     }
-    console.log(queryObj);
+
     return this;
   };
 }

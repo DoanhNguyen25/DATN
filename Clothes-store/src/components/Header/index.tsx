@@ -48,6 +48,7 @@ const Header = () => {
   const handleLogout = () => {
     dispatch(logout());
     localStorage.removeItem("access");
+    localStorage.removeItem("userInfo");
     navigate("/login");
   };
 

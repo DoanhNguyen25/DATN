@@ -68,7 +68,7 @@ export const Center = styled.div`
     .navbar__submenu {
       background: teal;
       position: absolute;
-      z-index: 1;
+      z-index: 9;
       top: 103%;
       right: 56%;
       display: flex;
@@ -89,7 +89,7 @@ export const Center = styled.div`
         transform: rotate(45deg);
       }
       li {
-        text-aligh: left !important;
+        text-align: left !important;
         display: flex;
         justify-content: flex-start;
         padding: 0.5rem 1rem;
@@ -122,7 +122,7 @@ export const MenuItem = styled.div<{ isOpen?: Boolean }>`
   .user__menu {
     background: teal;
     position: absolute;
-    z-index: 2;
+    z-index: 9;
     right: -1rem;
     top: 2.5rem;
     color: #fff;

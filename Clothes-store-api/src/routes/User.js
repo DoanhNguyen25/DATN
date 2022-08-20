@@ -5,7 +5,9 @@ const router = new express.Router();
 const { upload } = require("../utils/updloadfile/upload");
 const { cloudinary } = require("../utils/storage/cloudinary");
 const { mailTransporter } = require("../utils/email/sendmail");
-const { Comment } = require("../models/Product");
+const { Comment, Product } = require("../models/Product");
+const { Order } = require("../models/Order");
+const bcrypt = require("bcryptjs");
 
 // create user
 router.post("/api/user/create", upload.single("image"), async (req, res) => {
@@ -66,7 +68,7 @@ router.get("/api/user/:id", auth.verifyToken, async (req, res) => {
 });
 
 // api edit user
-router.patch("/api/user/:id", auth.verifyToken, async (req, res) => {
+router.patch("/api/user/:id", async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = [
     "username",
@@ -77,6 +79,7 @@ router.patch("/api/user/:id", auth.verifyToken, async (req, res) => {
     "avatar",
     "phone",
     "isActive",
+    "password",
   ];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
@@ -91,6 +94,9 @@ router.patch("/api/user/:id", auth.verifyToken, async (req, res) => {
     if (!user) {
       return res.status(404).send("user does not exist!!!");
     }
+    let encodePass = req.body.password
+      ? await bcrypt.hash(req.body.password, 8)
+      : "";
 
     const data = {
       username: req.body.username || user.username,
@@ -100,11 +106,14 @@ router.patch("/api/user/:id", auth.verifyToken, async (req, res) => {
       isActive: req.body.isActive,
       avatar: req.body.avatar || user.avatar,
       phone: req.body.phone || user.phone,
+      password: encodePass || user.password,
     };
-    await User.findByIdAndUpdate({ _id: req.params.id }, data, { new: true });
+    await User.findByIdAndUpdate({ _id: req.params.id }, data, {
+      new: true,
+    });
     res.send(data);
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).send({ message: e.message });
   }
 });
 
@@ -132,9 +141,13 @@ router.post("/api/sendmail", async (req, res) => {
     {
       from: "crishnguyen25@gmail.com",
       to: `${email}`,
-      subject: "testing out nodemailer",
+      subject: "Đặt lại mật khẩu",
       text: "the first email sended by nodemailer",
-      html: `<h1 style="color:red;font-size:12rem">hello ae</h1>`,
+      html: `<div style="color:red;font-size:12rem;width:100%;height:20rem;background:pink">
+        <div style="width:70%; margin:0 auto; background:green">
+          chào e a đứng đây từ chiều!!!
+        </div>
+      </div>`,
     },
     (err) => {
       if (err) {
@@ -144,6 +157,91 @@ router.post("/api/sendmail", async (req, res) => {
       }
     }
   );
+});
+
+// api reset password
+router.post("/api/reset-password", async (req, res) => {
+  const { email } = req.body;
+
+  const userInfo = await User.findOne({ email: email });
+  await mailTransporter.sendMail(
+    {
+      from: "crishnguyen25@gmail.com",
+      to: `${email}`,
+      subject: "testing out nodemailer",
+      text: "the first email sended by nodemailer",
+      html: `<div style="
+        width: 100%;
+        background-color: gray;
+        padding: 4rem 0;
+      "
+    >
+      <div style="width:50%;margin:0 auto;background-color:white;padding:1rem;">
+        <div
+          style="
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid gray;
+            padding-bottom: 1rem;
+            align-items: center;
+          "
+        >
+          <h2>Nguyễn Đình Doanh</h2>
+          <h1>LAMA</h1>
+        </div>
+        <div
+          style="
+            width: 100%;
+            margin-top: 1rem;
+            border-bottom: 1px solid gray;
+            padding-bottom: 2rem;
+          "
+        >
+          <p>Dear, Doanh</p>
+          <br />
+          <p>
+            Yêu cầu đặt lại mật khẩu đã được liên kết tới địa chỉ email này. Bạn
+            có thể thay đổi mật khẩu theo đường dẫn dưới đây, có hiệu lực trong
+            vòng 24 giờ:
+          </p>
+
+          <button
+            style="
+              border: none;
+              outline: none;
+              padding: 1rem;
+              background-color: teal;
+              margin-top: 2rem;
+              border-radius: 0.5rem;
+            "
+          >
+            <a
+              href="http://localhost:3000/reset-pass?idReset=${userInfo._id}"
+              style="color: #fff; text-decoration: none"
+              >Đặt lại mật khẩu</a
+            >
+          </button>
+        </div>
+        <div style="width: 100%; height: 3rem; margin-top: 1rem">
+          <p>Lama Store</p>
+        </div>
+      </div>
+    </div>`,
+    },
+    (err) => {
+      if (err) {
+        res.status(400).send({ mesage: "lỗi", err });
+      } else {
+        res.status(200).send({ message: `Gửi thành công tới ${email}` });
+      }
+    }
+  );
+});
+
+// api update password
+router.patch("/api/password/update", async (req, ress) => {
+  const password = req.body;
 });
 
 // api get stats user
@@ -172,6 +270,90 @@ router.get("/api/stats", auth.verifyTokenAndAuthorization, async (req, res) => {
     ]);
 
     res.status(200).send(data);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// dashboad stasts
+
+router.get("/api/dashboard", async (req, res) => {
+  const date = new Date();
+  const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
+
+  try {
+    const dataUser = await User.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: lastYear },
+        },
+      },
+      {
+        $project: {
+          month: { $month: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: "$month",
+          totalUsers: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const dataProduct = await Product.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: lastYear },
+        },
+      },
+      {
+        $project: {
+          month: { $month: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: "$month",
+          totalProduct: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const dataOrder = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: lastYear },
+        },
+      },
+      {
+        $project: {
+          month: { $month: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: "$month",
+          totalOrder: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const dataRevenue = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: lastYear },
+        },
+      },
+      {
+        $group: {
+          _id: { $month: "$createdAt" },
+          totalAmount: { $sum: "$bill" },
+        },
+      },
+    ]);
+
+    res.status(200).send({ dataUser, dataOrder, dataProduct, dataRevenue });
   } catch (error) {
     res.status(500).send(error);
   }

@@ -86,7 +86,7 @@ const LoginPage = () => {
           </div>
           <Button>LOGIN</Button>
           <LinkCustom>
-            <Link to={"/reset-password"}>QUÊN MẬT KHẨU?</Link>
+            <Link to={"/forgot-pass"}>QUÊN MẬT KHẨU?</Link>
           </LinkCustom>
           <LinkCustom>
             <Link to={"/signup"}>ĐĂNG KÝ TÀI KHOẢN</Link>

@@ -22,8 +22,23 @@ const Products = () => {
   }, []);
   return (
     <ProductsWrapper>
-      {products &&
-        products.map((product) => <Product item={product} key={product._id} />)}
+      <div style={{ position: "relative", margin: "4rem 0" }}>
+        <div className="products--title">Sản phẩm nổi bật</div>
+        <div
+          style={{
+            width: "30%",
+            height: "0.1rem",
+            background: "teal",
+            margin: "0 auto",
+          }}
+        ></div>
+      </div>
+      <div style={{ display: "flex", padding: "20px" }}>
+        {products &&
+          products.map((product) => (
+            <Product item={product} key={product._id} />
+          ))}
+      </div>
     </ProductsWrapper>
   );
 };

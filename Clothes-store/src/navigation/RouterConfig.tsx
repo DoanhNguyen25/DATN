@@ -2,9 +2,11 @@ import { useRoutes } from "react-router-dom";
 import {
   CART,
   CATEGORY,
+  FORGOT_PASS,
   ORDER,
   ORDER_HISTORY,
   PRODUCTDETAIL,
+  RESET_PASS,
   ROOT,
   SEARCH,
   USER_PROFILE,
@@ -22,6 +24,9 @@ import OrderPage from "../pages/OrderPage";
 import SearchPage from "../pages/SearchPage";
 import UserProfile from "../pages/UserProfile";
 import OrderHistory from "../pages/OrderHistory";
+import { SendMail } from "../api/UserApi";
+import SendMailPage from "../pages/SendMailPage";
+import ResetPasswordPage from "../pages/ResetPasswordPage";
 
 const RouterConfig = () => {
   const user = localStorage.getItem("access");
@@ -36,6 +41,8 @@ const RouterConfig = () => {
       children: [
         { path: "login", element: <LoginPage /> },
         { path: "signup", element: <SignUpPage /> },
+        { path: FORGOT_PASS, element: <SendMailPage /> },
+        { path: RESET_PASS, element: <ResetPasswordPage /> },
       ],
     },
     {

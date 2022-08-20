@@ -19,8 +19,8 @@ const Newsletter = () => {
   };
   return (
     <NewsletterWrapper>
-      <Title title="newsletter" />
-      <p>Get timely updates from your favorite products</p>
+      <Title title="Đăng kí thành viên mới" />
+      <p>Nhận thông tin mới nhất từ sản phẩm mà bạn yêu thích</p>
       <div className="input__container">
         <input
           type="text"
