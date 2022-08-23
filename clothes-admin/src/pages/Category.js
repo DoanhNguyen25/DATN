@@ -80,9 +80,9 @@ function Category() {
                         {/* <PlusSquareOutlined onClick={() => BtnAddNew(record)} style={{ color: 'green', cursor: 'pointer', marginRight: 10, fontSize: 20 }} /> */}
                         <EditOutlined onClick={() => BtnModalUpdate(record)} style={{ color: 'aqua', cursor: 'pointer', fontSize: 20 }} />
                         {/* <DeleteOutlined style={{ color: 'red', cursor: 'pointer' }} /> */}
-                        <Popconfirm cancelText="Hủy" okText='Xóa' title="Chắc chắn xóa?" onConfirm={() => BtnDelete(record)}>
+                        {/* <Popconfirm cancelText="Hủy" okText='Xóa' title="Chắc chắn xóa?" onConfirm={() => BtnDelete(record)}>
                             <DeleteOutlined style={{ color: 'red', cursor: 'pointer', fontSize: 20, marginRight: 10 }} />
-                        </Popconfirm>
+                        </Popconfirm> */}
                     </>
                 );
             }

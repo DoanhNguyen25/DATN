@@ -9,7 +9,9 @@ const Products = () => {
   useEffect(() => {
     try {
       const getListProduct = async () => {
-        const res = await GetPoduct("http://localhost:8000/api/products");
+        const res = await GetPoduct(
+          "http://localhost:8000/api/products?size=3"
+        );
         if (res.data) {
           setProducts(res.data.products);
         }

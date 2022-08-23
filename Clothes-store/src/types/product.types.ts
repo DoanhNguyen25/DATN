@@ -12,7 +12,7 @@ export interface IProduct {
   listImg: string[];
   categories: Category;
   color: String;
-  price: Number;
+  price: number;
   reviews: Comment[];
   quantityInStock: Number;
 }

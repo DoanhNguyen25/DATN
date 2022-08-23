@@ -32,6 +32,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { IProduct } from "../../types/product.types";
 import { getComment } from "../../redux/action/productAction";
+import { formatMoney } from "../../components/Functions";
 
 const ProductPage = () => {
   const [product, setProduct] = useState<IProduct>();
@@ -94,6 +95,8 @@ const ProductPage = () => {
     dispatch(addToCart(productId, color, size, quantity));
   };
 
+  console.log(typeof product?.price);
+
   return (
     <MainLayout>
       <Wrapper>
@@ -109,7 +112,7 @@ const ProductPage = () => {
             tristique tortor pretium ut. Curabitur elit justo, consequat id
             condimentum ac, volutpat ornare.
           </Desc>
-          <Price>$ 20</Price>
+          <Price>{product && formatMoney(product?.price)}</Price>
           <FilterContainer>
             <Filter>
               <FilterTitle>Color</FilterTitle>
