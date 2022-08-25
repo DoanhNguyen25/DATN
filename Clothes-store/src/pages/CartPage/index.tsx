@@ -76,7 +76,9 @@ const CartPage = () => {
                 </div>
               ))
             ) : (
-              <div>không có sản phẩm nào trong giỏ hàng đâu e êi</div>
+              <div style={{ textAlign: "center" }}>
+                không có sản phẩm nào trong giỏ hàng
+              </div>
             )}
           </Info>
           <Summary>

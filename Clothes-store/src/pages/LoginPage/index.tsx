@@ -22,13 +22,13 @@ const LoginPage = () => {
   const dispatch: Dispatch<any> = useDispatch();
   const userInfo = useSelector((state: State) => state.userReducer.userInfo);
   const navigate = useNavigate();
-  const {pathname} = useLocation()
+  const { pathname } = useLocation();
   useEffect(() => {
     if (userInfo !== undefined && userInfo._id) {
-      if(pathname === "/login"){
+      if (pathname === "/login") {
         navigate("/");
-      }else{
-        navigate(`${pathname}`)
+      } else {
+        navigate(`${pathname}`);
       }
     }
   }, [userInfo, navigate]);
@@ -79,6 +79,7 @@ const LoginPage = () => {
               name="password"
               value={formik.values.password}
               onChange={formik.handleChange}
+              type="password"
             />
             {formik.errors.password && formik.touched.password && (
               <span className="msg__error">{formik.errors.password}</span>

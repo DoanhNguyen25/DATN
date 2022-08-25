@@ -8,7 +8,7 @@ interface Category {
 export interface IProduct {
   _id: String;
   title: String;
-  desc: String;
+  desc: string;
   listImg: string[];
   categories: Category;
   color: String;

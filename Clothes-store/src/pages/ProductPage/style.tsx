@@ -1,19 +1,60 @@
 import styled from "styled-components";
+import { keyframes } from "styled-components";
+
+const fadeAway = keyframes`
+0%
+{
+ opacity:0.8;
+}
+100%
+{
+  opacity:1;
+}
+`;
 
 export const Wrapper = styled.div`
   padding: 50px;
   display: flex;
 `;
 
-export const ImgContainer = styled.div`
+export const ImgContainer = styled.div<{ imageHover: string }>`
   flex: 1;
-`;
+  display: flex;
+  height: 40rem;
+  transition: ease-out 0.3s;
+  transition: ease-out 0.3s;
 
-export const Image = styled.img`
-  width: 100%;
-  height: 90vh;
-  object-fit: cover;
+  .list--image {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
+    .sub--image {
+      width: 80%;
+      height: 8rem;
+      border: 2px solid black;
+      margin: 1rem 0;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+
+  .main--image {
+    flex: 5;
+    padding-left: 1rem;
+    transition: ease-out 0.3s;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
 `;
 
 export const InfoContainer = styled.div`
@@ -39,7 +80,6 @@ export const FilterContainer = styled.div`
   margin: 30px 0px;
   display: flex;
   justify-content: space-between;
-
 `;
 
 export const Filter = styled.div`

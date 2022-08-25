@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MainLayout from "../../layouts/MainLayout";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,30 +7,22 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import axios from "axios";
+import { GetOrder } from "../../api/OrderApi";
+import { ProductInCart } from "../../types/cart.types";
+import { UserInfo } from "../../types/user.types";
 
 function createData(
-  name: string,
+  fullname: string,
   address: string,
   phone: string,
   status: number,
   email: string,
-  product: string,
-  total: number
+  products: ProductInCart[],
+  bill: number
 ) {
-  return { name, address, phone, status, email, product, total };
+  return { fullname, address, phone, status, email, products, bill };
 }
-
-const rows = [
-  createData(
-    "DoanhNguyen",
-    "132 cầu giấy",
-    "0919391071",
-    0 ,
-    "doanhnguyen@gmail.com",
-    "áo:2 cái",
-    200000
-  ),
-];
 
 const render = (data: any) => {
   switch (data) {
@@ -46,6 +38,42 @@ const render = (data: any) => {
 };
 
 const OrderHistory = () => {
+  const [orders, setOrders] = useState<any>();
+  const userInfoFromStorage: UserInfo = localStorage.getItem("userInfo")
+    ? JSON.parse(localStorage.getItem("userInfo") + "")
+    : undefined;
+
+  const getOrder = async () => {
+    try {
+      const req = await GetOrder("http://localhost:8000/api/order");
+      if (req.data) {
+        setOrders(req.data);
+      }
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getOrder();
+  }, []);
+
+  const rows =
+    orders &&
+    orders
+      .filter((item: any) => item.userId === userInfoFromStorage._id)
+      .map((order: any) =>
+        createData(
+          order.fullname,
+          order.address,
+          order.phone,
+          order.status,
+          order.email,
+          order.products,
+          order.bill
+        )
+      );
+
   return (
     <MainLayout>
       <TableContainer component={Paper}>
@@ -64,22 +92,29 @@ const OrderHistory = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow
-                key={row.name}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th">
-                  {row.name}
-                </TableCell>
-                <TableCell align="center">{row.address}</TableCell>
-                <TableCell align="center">{row.phone}</TableCell>
-                <TableCell align="center">{render(row.status)}</TableCell>
-                <TableCell align="center">{row.email}</TableCell>
-                <TableCell align="center">{row.product}</TableCell>
-                <TableCell align="center">{row.total}</TableCell>
-              </TableRow>
-            ))}
+            {rows &&
+              rows.map((row: any) => (
+                <TableRow
+                  key={row.fullname}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th">{row.fullname}</TableCell>
+                  <TableCell align="center">{row.address}</TableCell>
+                  <TableCell align="center">{row.phone}</TableCell>
+                  <TableCell align="center">{render(row.status)}</TableCell>
+                  <TableCell align="center">{row.email}</TableCell>
+                  <TableCell align="center">
+                    {row.products &&
+                      row.products
+                        .map(
+                          (product: any) =>
+                            `${product.productName}: ${product.quantity}`
+                        )
+                        .join()}
+                  </TableCell>
+                  <TableCell align="center">{row.bill}</TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

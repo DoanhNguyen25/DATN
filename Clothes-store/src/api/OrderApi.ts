@@ -13,5 +13,9 @@ function CreateOrder(urlFetch: string, data: OrderBody) {
   });
 }
 
+function GetOrder(urlFetch: string){
+  return axios.get(urlFetch)
+}
 
-export {CreateOrder}
+
+export {CreateOrder, GetOrder}

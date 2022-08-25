@@ -19,7 +19,6 @@ import {
   FilterSize,
   FilterSizeOption,
   FilterTitle,
-  Image,
   ImgContainer,
   InfoContainer,
   Price,
@@ -44,7 +43,7 @@ const ProductPage = () => {
   const [isActive, setIsActive] = useState(0);
   const { id } = useParams();
   const dispatch: Dispatch<any> = useDispatch();
-
+  const [img, setImg] = useState<any>("");
   const productId = id;
   const images = [
     "https://images.pexels.com/photos/5886041/pexels-photo-5886041.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
@@ -68,12 +67,17 @@ const ProductPage = () => {
     }
   }, [quantity]);
 
+  const handleSwitchImage = (e: any) => {
+    setImg(e.target.src);
+  };
+
   useEffect(() => {
     window.scroll(0, 0);
     const getData = async () => {
       const req = await axios.get(`http://localhost:8000/api/product/${id}`);
       if (req.data) {
         setProduct(req.data);
+        setImg(req.data.listImg[0]);
       }
     };
     getData();
@@ -96,21 +100,46 @@ const ProductPage = () => {
   };
 
   console.log(typeof product?.price);
+  console.log(img);
 
   return (
     <MainLayout>
       <Wrapper>
-        <ImgContainer onClick={() => setIsOpen(true)}>
-          <Image src={product && product?.listImg[0]} />
+        <ImgContainer imageHover={images[0]}>
+          <div className="list--image">
+            <div className="sub--image">
+              <img
+                src="https://images.pexels.com/photos/5886041/pexels-photo-5886041.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                alt="anh1"
+                onClick={handleSwitchImage}
+              />
+            </div>
+            <div className="sub--image">
+              <img
+                src="https://images.pexels.com/photos/2983464/pexels-photo-2983464.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                alt="anh2"
+                onClick={handleSwitchImage}
+              />
+            </div>
+            <div className="sub--image">
+              <img
+                src="//placekitten.com/800/1200"
+                alt="anh3"
+                onClick={handleSwitchImage}
+              />
+            </div>
+          </div>
+          <div className="main--image" onClick={() => setIsOpen(true)}>
+            <img src={img} alt="main-avatar" />
+          </div>
+          {/* <Image src={product && product?.listImg[0]} /> */}
         </ImgContainer>
         <InfoContainer>
           <Title>{product?.title}</Title>
           <Desc>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-            venenatis, dolor in finibus malesuada, lectus ipsum porta nunc, at
-            iaculis arcu nisi sed mauris. Nulla fermentum vestibulum ex, eget
-            tristique tortor pretium ut. Curabitur elit justo, consequat id
-            condimentum ac, volutpat ornare.
+            <div
+              dangerouslySetInnerHTML={{ __html: product ? product?.desc : "" }}
+            />
           </Desc>
           <Price>{product && formatMoney(product?.price)}</Price>
           <FilterContainer>
