@@ -89,7 +89,9 @@ const Header = () => {
         </Left>
         <Center>
           <ul className="navbar__menu">
-            <li>Outlet</li>
+            <li>
+              <Link to={"/outlet"}>Outlet</Link>
+            </li>
             <li>
               Sản Phẩm
               <ul className="navbar__submenu">
@@ -109,9 +111,15 @@ const Header = () => {
                 </li>
               </ul>
             </li>
-            <li>Coolxprint</li>
-            <li>Về chúng tôi</li>
-            <li>Blog</li>
+            <li>
+              <Link to={"/coolxprint"}>Coolxprint</Link>
+            </li>
+            <li>
+              <Link to={"/about-us"}>Về chúng tôi</Link>
+            </li>
+            <li>
+              <Link to={"/contact"}>Liên hệ</Link>
+            </li>
           </ul>
         </Center>
         <Right>

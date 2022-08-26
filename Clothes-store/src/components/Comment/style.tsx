@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const CommentWrapper = styled.div`
   width: 50%;
-  padding: 3.125rem;
+  // padding: 3.125rem;
   display: flex;
   flex-direction: column;
   .comment__form {

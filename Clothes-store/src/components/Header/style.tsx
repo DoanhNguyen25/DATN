@@ -42,6 +42,7 @@ export const Center = styled.div`
     margin-block-end: 0em;
     justify-content: center;
     position: relative;
+
     li {
       flex: 0 0 15%;
       list-style: none;
@@ -51,6 +52,11 @@ export const Center = styled.div`
       justify-content: center;
       cursor: pointer;
       transition: all 0.3s;
+
+      a {
+        text-decoration: none;
+        color: #000;
+      }
       &:first-child {
         flex: 0 0 10%;
         list-style: none;

@@ -1,10 +1,14 @@
 import { useRoutes } from "react-router-dom";
 import {
+  ABOUT_US,
   CART,
   CATEGORY,
+  CONTACT,
+  COOLXPRINT,
   FORGOT_PASS,
   ORDER,
   ORDER_HISTORY,
+  OUTLET,
   PRODUCTDETAIL,
   RESET_PASS,
   ROOT,
@@ -27,6 +31,10 @@ import OrderHistory from "../pages/OrderHistory";
 import { SendMail } from "../api/UserApi";
 import SendMailPage from "../pages/SendMailPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
+import AboutUsPage from "../pages/AboutUsPage";
+import OutletPage from "../pages/OutletPage";
+import CoolxprintPage from "../pages/CoolxprintPage";
+import ContactPage from "../pages/ContactPage";
 
 const RouterConfig = () => {
   const user = localStorage.getItem("access");
@@ -72,6 +80,22 @@ const RouterConfig = () => {
     {
       path: USER_PROFILE,
       element: <UserProfile />,
+    },
+    {
+      path: ABOUT_US,
+      element: <AboutUsPage />,
+    },
+    {
+      path: OUTLET,
+      element: <OutletPage />,
+    },
+    {
+      path: COOLXPRINT,
+      element: <CoolxprintPage />,
+    },
+    {
+      path:CONTACT,
+      element:<ContactPage/>
     },
     {
       path: "*",

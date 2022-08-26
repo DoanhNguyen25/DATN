@@ -6,6 +6,10 @@ import Newsletter from "../../components/Newsletter";
 import MainLayout from "../../layouts/MainLayout";
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 import {
   AddContainer,
@@ -33,6 +37,39 @@ import { IProduct } from "../../types/product.types";
 import { getComment } from "../../redux/action/productAction";
 import { formatMoney } from "../../components/Functions";
 
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
 const ProductPage = () => {
   const [product, setProduct] = useState<IProduct>();
   const [quantity, setQuantity] = useState(1);
@@ -44,6 +81,7 @@ const ProductPage = () => {
   const { id } = useParams();
   const dispatch: Dispatch<any> = useDispatch();
   const [img, setImg] = useState<any>("");
+  const [value, setValue] = React.useState(0);
   const productId = id;
   const images = [
     "https://images.pexels.com/photos/5886041/pexels-photo-5886041.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
@@ -53,6 +91,10 @@ const ProductPage = () => {
   ];
   const COLORS = ["black", "darkblue", "gray"];
   const SIZES = ["XS", "M", "S", "L", "XL"];
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
 
   const handleIncreaseQuantity = useCallback(
     () => setQuantity((pre) => pre + 1),
@@ -135,13 +177,30 @@ const ProductPage = () => {
           {/* <Image src={product && product?.listImg[0]} /> */}
         </ImgContainer>
         <InfoContainer>
-          <Title>{product?.title}</Title>
-          <Desc>
-            <div
-              dangerouslySetInnerHTML={{ __html: product ? product?.desc : "" }}
-            />
-          </Desc>
+          <Title>{product?.title} - ANSSJSM-200021</Title>
           <Price>{product && formatMoney(product?.price)}</Price>
+          <br />
+          <div>Tình trạng: Còn hàng</div>
+          <br></br>
+          <hr
+            style={{
+              width: "95%",
+              background: "gray",
+              marginLeft: "0",
+              opacity: "0.5",
+            }}
+          ></hr>
+          <Desc>
+            {/* <div
+              dangerouslySetInnerHTML={{ __html: product ? product?.desc : "" }}
+            /> */}
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Accusamus
+            cum labore omnis cupiditate quam. Quia doloribus incidunt voluptas,
+            vel voluptatum amet excepturi eaque blanditiis laboriosam, veniam
+            unde, eligendi voluptate vero?abore omnis cupiditate quam. Quia
+            doloribus incidunt voluptas, vel voluptatum a
+          </Desc>
+
           <FilterContainer>
             <Filter>
               <FilterTitle>Color</FilterTitle>
@@ -175,14 +234,37 @@ const ProductPage = () => {
                 <Add />
               </div>
             </AmountContainer>
-            <Button
-              onClick={() => handleAddToCart(productId, quantity, color, size)}
-            >
-              ADD TO CART
-            </Button>
           </AddContainer>
+          <Button
+            style={{ marginTop: "3rem" }}
+            onClick={() => handleAddToCart(productId, quantity, color, size)}
+          >
+            ADD TO CART
+          </Button>
         </InfoContainer>
       </Wrapper>
+      <div style={{ padding: "0 50px", marginTop: "3rem" }}>
+        <Box sx={{ width: "100%" }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+            >
+              <Tab label="Mô tả" {...a11yProps(0)} />
+              <Tab label="Bình luận" {...a11yProps(1)} />
+            </Tabs>
+          </Box>
+          <TabPanel value={value} index={0}>
+            Item One
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <Comment comment={product && product?.reviews} />
+          </TabPanel>
+        </Box>
+      </div>
+
+      <Newsletter />
 
       {isOpen && (
         <Lightbox
@@ -198,9 +280,6 @@ const ProductPage = () => {
           }
         />
       )}
-
-      <Comment comment={product && product?.reviews} />
-      <Newsletter />
     </MainLayout>
   );
 };

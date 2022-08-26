@@ -11,3 +11,8 @@ export const USER_PROFILE = "user-profile";
 export const ORDER_HISTORY = "order-history";
 export const FORGOT_PASS = "forgot-pass";
 export const RESET_PASS = "reset-pass";
+export const ABOUT_US = "about-us";
+export const OUTLET = "outlet";
+export const COOLXPRINT = "coolxprint";
+export const CONTACT = "contact";
+
