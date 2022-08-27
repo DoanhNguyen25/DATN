@@ -56,7 +56,7 @@ const SignIn = () => {
           })
           localStorage.setItem('token_admin', res.data.access_token)
           localStorage.setItem('user_name', res.data.fullname)
-          localStorage.setItem('role', res.data.isAdmin)
+          localStorage.setItem('role', res.data.role)
           history.push('/')
         }
         else {
