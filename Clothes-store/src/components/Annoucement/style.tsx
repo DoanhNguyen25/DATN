@@ -8,5 +8,7 @@ export const Wrapper = styled.div`
     align-items:center;
     justify-content:center;
     font-size:0.875rem;
-    font-weight:500
-`
+    font-weight:500;
+    font-family: "Roboto Mono", monospace;
+
+`;

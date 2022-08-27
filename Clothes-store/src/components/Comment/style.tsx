@@ -11,7 +11,6 @@ export const CommentWrapper = styled.div`
       width: 50rem;
       padding: 0.5rem;
       font-size: 1rem;
-      font-family: "Roboto Mono", monospace;
     }
   }
 `;

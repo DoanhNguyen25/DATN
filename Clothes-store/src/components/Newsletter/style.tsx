@@ -7,7 +7,6 @@ export const NewsletterWrapper = styled.div`
   justify-content: center;
   flex-direction: column;
   padding-bottom: 5rem;
-
   p {
     font-size: 24px;
     font-weight: 300;

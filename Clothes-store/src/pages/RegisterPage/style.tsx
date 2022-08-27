@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const SignUpContainer = styled.div`
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   overflow: hidden;
   background: linear-gradient(
       rgba(255, 255, 255, 0.5),

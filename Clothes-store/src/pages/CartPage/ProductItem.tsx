@@ -49,7 +49,7 @@ const ProductItem = (props: IProps) => {
           <ProductId>
             <b>ID:</b> {props.item.productId}
           </ProductId>
-          <ProductColor color={"red"} />
+          <ProductColor color={props.item.color} />
           <ProductSize>
             <b>Size:</b> {props.item.size}
           </ProductSize>

@@ -4,6 +4,7 @@ import "./App.css";
 import RouterConfig from "./navigation/RouterConfig";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ButtonScrollToTop from "./components/ButtonScrollToTop";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <BrowserRouter>
         <RouterConfig />
       </BrowserRouter>
+      <ButtonScrollToTop/>
 
       <ToastContainer
         hideProgressBar

@@ -48,7 +48,7 @@ const SignIn = () => {
     await callApiHeaders('POST', 'login', { username: values.username, password: values.password })
       .then((res) => {
         console.log(res.data)
-        if (res.data.isAdmin && res.data.isActive) {
+        if (res.data.role !== 3 && res.data.isActive) {
           notification.success({
             message: 'Login Success!',
             description: '',

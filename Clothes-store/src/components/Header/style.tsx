@@ -1,12 +1,19 @@
 import styled from "styled-components";
-export const HeaderWrapper = styled.div`
+
+export const HeaderWrapper = styled.div<{ visible: boolean }>`
   /* border-bottom: 1px solid gray; */
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  position: ${(props) => (props.visible ? "sticky" : "relative")};
+  top: 0;
+  z-index: ${(props) => (props.visible ? "999" : "0")};
+  background: #fff;
   .header__container {
-    padding: 0.5rem 4rem;
+    padding: ${(props) => (!props.visible ? "0.5rem 4rem" : "0rem 4rem")};
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: all 0.3s;
+
     &--search {
       border: 1px solid lightgray;
       display: flex;
@@ -160,5 +167,5 @@ export const MenuItem = styled.div<{ isOpen?: Boolean }>`
 
 export const Logo = styled.span`
   font-weight: bold;
-  font-size: 1.75rem;
+  font-size: 2.75rem;
 `;

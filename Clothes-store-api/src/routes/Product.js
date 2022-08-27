@@ -194,7 +194,7 @@ router.delete("/api/comment/:commentId", auth.verifyToken, async (req, res) => {
       }
     }
     if (commentIndex > -1) {
-      productPresent.reviews.splice(commentIndex, 1);
+      productPresent?.reviews.splice(commentIndex, 1);
       await commentSelected.remove();
       await productPresent.save();
       return res.status(200).send({ message: "xóa bình luận thành công!!" });

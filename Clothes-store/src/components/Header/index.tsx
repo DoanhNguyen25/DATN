@@ -24,6 +24,7 @@ import { GetUserInfo } from "../../api/UserApi";
 import { UserInfo } from "../../types/user.types";
 import axios from "axios";
 const Header = () => {
+  const [isSticky, setIsSticky] = useState(false);
   const [wordEnter, setWordEnter] = useState<string>("");
   const [categories, setCategories] = useState<any>([]);
   const [isOpen, setIsOpen] = useState<Boolean>(false);
@@ -39,6 +40,15 @@ const Header = () => {
 
   const clearInput = () => {
     setWordEnter("");
+  };
+
+  const toggleVisible = () => {
+    const scrolled = document.documentElement.scrollTop;
+    if (scrolled > 200) {
+      setIsSticky(true);
+    } else if (scrolled <= 300) {
+      setIsSticky(false);
+    }
   };
 
   const userInfoFromStorage: UserInfo = localStorage.getItem("userInfo")
@@ -77,10 +87,16 @@ const Header = () => {
     };
 
     getCategory();
+
+    window.addEventListener("scroll", toggleVisible);
+
+    return () => {
+      window.removeEventListener("scroll", toggleVisible);
+    };
   }, []);
 
   return (
-    <HeaderWrapper>
+    <HeaderWrapper visible={isSticky}>
       <div className="header__container">
         <Left>
           <Link to={"/"}>

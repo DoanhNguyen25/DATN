@@ -2,11 +2,12 @@ import styled from "styled-components";
 
 export const FooterWrapper = styled.div`
   display: flex;
-  border-top: 1px solid gray;
+  border-top: 1px solid #b7b6b68f;
+  padding: 0 50px;
 `;
 
 export const FooterLeft = styled.div`
-  flex: 1;
+  flex: 2;
   display: flex;
   flex-direction: column;
   padding: 20px;

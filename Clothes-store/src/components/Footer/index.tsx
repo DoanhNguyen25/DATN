@@ -19,7 +19,7 @@ const Footer = () => {
   return (
     <FooterWrapper>
       <FooterLeft>
-        <div className="footer__left--logo">DoanhNguyen</div>
+        <h3 className="footer__left--logo">DoanhNguyen</h3>
         <div className="footer__left--desc">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius,
           quaerat! Assumenda neque cumque officiis, animi ea saepe quibusdam

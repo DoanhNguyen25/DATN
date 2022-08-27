@@ -99,7 +99,7 @@ function Sidenav({ color }) {
     <>
       <div className="brand">
         <img src={logo} alt="" />
-        {role === 0 ?
+        {role === 1 ?
           <span>Admin: {UserName}</span> : <span>Nhân viên: {UserName}</span>
         }
       </div>
@@ -170,7 +170,7 @@ function Sidenav({ color }) {
             <span className="label">Quản lý bình luận</span>
           </NavLink>
         </Menu.Item>
-        {role === 0 &&
+        {role === 1 &&
           <Menu.Item key="8">
             <NavLink to="/Người dùng">
               <span

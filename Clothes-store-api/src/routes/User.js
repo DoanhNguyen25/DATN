@@ -79,7 +79,6 @@ router.patch("/api/user/:id", async (req, res) => {
     "isActive",
     "avatar",
     "phone",
-    "isActive",
     "password",
     "role",
   ];
@@ -106,7 +105,7 @@ router.patch("/api/user/:id", async (req, res) => {
       email: req.body.email || user.email,
       isAdmin: req.body.isAdmin,
       isActive: req.body.isActive,
-      role: req.body.role || user.role,
+      role: req.body.role,
       avatar: req.body.avatar || user.avatar,
       phone: req.body.phone || user.phone,
       password: encodePass || user.password,

@@ -4,8 +4,8 @@ import React, { Dispatch, useCallback, useEffect, useState } from "react";
 import Comment from "../../components/Comment";
 import Newsletter from "../../components/Newsletter";
 import MainLayout from "../../layouts/MainLayout";
-// import Lightbox from "react-image-lightbox";
-// import "react-image-lightbox/style.css";
+import Lightbox from "react-image-lightbox";
+import "react-image-lightbox/style.css";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
@@ -149,14 +149,14 @@ const ProductPage = () => {
       <Wrapper>
         <ImgContainer imageHover={images[0]}>
           <div className="list--image">
-            <div className="sub--image">
-              <img
-                src="https://images.pexels.com/photos/5886041/pexels-photo-5886041.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-                alt="anh1"
-                onClick={handleSwitchImage}
-              />
-            </div>
-            <div className="sub--image">
+            {product &&
+              product.listImg.map((item, index) => (
+                <div className="sub--image" key={index}>
+                  <img src={item} alt="anh1" onClick={handleSwitchImage} />
+                </div>
+              ))}
+
+            {/* <div className="sub--image">
               <img
                 src="https://images.pexels.com/photos/2983464/pexels-photo-2983464.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
                 alt="anh2"
@@ -169,7 +169,7 @@ const ProductPage = () => {
                 alt="anh3"
                 onClick={handleSwitchImage}
               />
-            </div>
+            </div> */}
           </div>
           <div className="main--image" onClick={() => setIsOpen(true)}>
             <img src={img} alt="main-avatar" />
@@ -266,7 +266,7 @@ const ProductPage = () => {
 
       <Newsletter />
 
-      {/* {isOpen && (
+      {isOpen && (
         <Lightbox
           mainSrc={images[photoIndex]}
           nextSrc={images[(photoIndex + 1) % images.length]}
@@ -279,7 +279,7 @@ const ProductPage = () => {
             setPhotoIndex((photoIndex + 1) % images.length)
           }
         />
-      )} */}
+      )}
     </MainLayout>
   );
 };
