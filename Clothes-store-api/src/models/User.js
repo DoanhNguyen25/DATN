@@ -34,6 +34,11 @@ const UserSchema = new mongoose.Schema(
     avatar: {
       type: String,
     },
+    role: {
+      type: Number,
+      required: true,
+      default: 3,
+    },
     password: {
       type: String,
       required: true,
