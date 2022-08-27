@@ -109,13 +109,12 @@ function Users() {
         },
         {
             title: "Quyền",
-            key: "isAdmin",
+            key: "role",
             width: 150,
-            // dataIndex: "StatusId",
             render(record) {
                 return (
                     <div>
-                        {record.isAdmin ? 'Quản trị viên' : 'Khách hàng'}
+                        {record.role === 1 ? 'Quản trị viên' : (record.role === 2 ? 'Nhân viên' : 'Khách hàng')}
                     </div>
                 );
             }
@@ -146,7 +145,7 @@ function Users() {
     }
     const UpdateUser = async () => {
         await axios.patch(`${API_URL}/user/${isDataEdit._id}`, {
-            isAdmin: isDataEdit.isAdmin,
+            role: isDataEdit.role,
             isActive: isDataEdit.isActive,
         }, {
             headers: {
@@ -181,7 +180,8 @@ function Users() {
             username: values.username,
             email: values.email,
             password: values.password,
-            phone: values.phone
+            phone: values.phone,
+            role: 2
         }
         axios.post(`${API_URL}/register`, valueUpdate, {
             headers: {
@@ -361,7 +361,6 @@ function Users() {
                                     onOk={() => {
                                         UpdateUser();
                                         resetModal();
-                                        // console.log(isDataEdit)
                                     }}
                                 >
                                     <Select
@@ -382,13 +381,13 @@ function Users() {
                                         placeholder="Quyền"
                                         onChange={(e) => {
                                             setIsDataEdit(pre => {
-                                                return { ...pre, isAdmin: e }
+                                                return { ...pre, role: e }
                                             })
                                         }}
                                     >
-                                        <Option value={true}>Quản trị viên</Option>
-                                        <Option value={false}>Khách hàng</Option>
-                                        {/* <Option value="2">Nhân viên</Option> */}
+                                        <Option value={1}>Quản trị viên</Option>
+                                        <Option value={2}>Nhân viên</Option>
+                                        <Option value={3}>Khách hàng</Option>
 
                                     </Select>
                                 </Modal>

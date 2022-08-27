@@ -15,7 +15,7 @@ function Sidenav({ color }) {
   // const history = useHistory();
   const page = pathname.replace("/", "");
   const UserName = localStorage.getItem('user_name')
-  const role = localStorage.getItem('role');
+  const role = Number(localStorage.getItem('role'));
 
   const dashboard = [
     <svg
@@ -170,7 +170,7 @@ function Sidenav({ color }) {
             <span className="label">Quản lý bình luận</span>
           </NavLink>
         </Menu.Item>
-        {role &&
+        {role === 0 &&
           <Menu.Item key="8">
             <NavLink to="/Người dùng">
               <span
