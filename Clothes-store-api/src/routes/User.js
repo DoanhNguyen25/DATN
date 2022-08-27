@@ -11,7 +11,7 @@ const bcrypt = require("bcryptjs");
 
 // create user
 router.post("/api/user/create", upload.single("image"), async (req, res) => {
-  const { username, email, isAdmin, password, fullname, isActive, phone } =
+  const { username, email, isAdmin, password, fullname, isActive, phone, role } =
     req.body;
   const urlImg = await cloudinary.uploader.upload(req.file.path);
 
@@ -23,6 +23,7 @@ router.post("/api/user/create", upload.single("image"), async (req, res) => {
     avatar: urlImg.secure_url,
     fullname,
     phone,
+    role
   });
 
   try {
@@ -80,6 +81,7 @@ router.patch("/api/user/:id", async (req, res) => {
     "phone",
     "isActive",
     "password",
+    "role",
   ];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
@@ -104,6 +106,7 @@ router.patch("/api/user/:id", async (req, res) => {
       email: req.body.email || user.email,
       isAdmin: req.body.isAdmin,
       isActive: req.body.isActive,
+      role: req.body.role || user.role,
       avatar: req.body.avatar || user.avatar,
       phone: req.body.phone || user.phone,
       password: encodePass || user.password,

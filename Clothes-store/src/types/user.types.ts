@@ -17,6 +17,7 @@ export interface UserInfo {
   avatar: string;
   isAdmin: boolean;
   isActive: boolean;
+  role: Number;
   access_token: String;
 }
 

@@ -19,6 +19,7 @@ router.post("/api/register", async (req, res) => {
     fullname,
     isActive,
     phone,
+    role:2
   });
 
   try {

@@ -55,6 +55,7 @@ export const logout = () => (dispatch: Dispatch<UserAction>) => {
       fullname: "",
       isActive: false,
       isAdmin: false,
+      role:2,
       phone: "",
       username: "",
     },

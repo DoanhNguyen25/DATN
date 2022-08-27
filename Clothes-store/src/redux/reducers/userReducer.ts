@@ -16,6 +16,7 @@ const initialState: UserState = {
     fullname: "",
     isAdmin: true,
     isActive: true,
+    role: 2,
     avatar: "",
     phone: "",
     email: "",

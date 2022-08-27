@@ -1,8 +1,9 @@
 import styled from "styled-components";
 export const HeaderWrapper = styled.div`
-  border-bottom: 1px solid gray;
+  /* border-bottom: 1px solid gray; */
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
   .header__container {
-    padding: 0rem 3rem;
+    padding: 0.5rem 4rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
