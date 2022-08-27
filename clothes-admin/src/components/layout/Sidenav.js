@@ -170,7 +170,7 @@ function Sidenav({ color }) {
             <span className="label">Quản lý tin tức</span>
           </NavLink>
         </Menu.Item>
-        {role &&
+        {role === 0 &&
           <Menu.Item key="8">
             <NavLink to="/Người dùng">
               <span
