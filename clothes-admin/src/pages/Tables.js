@@ -258,6 +258,30 @@ function News() {
       }
     },
   };
+  const addProductProps = {
+    name: 'listImage',
+    action: 'http://localhost:8000/api/upload/multiple',
+    headers: {
+      authorization: 'authorization-text',
+    },
+    maxCount: 5,
+    multiple: true,
+
+    onChange(info) {
+      if (info.file.status !== 'uploading') {
+        setIsDataAdd({
+          ...isDataAdd,
+          listImg: info.fileList?.map(item => item.response[0]),
+        })
+      }
+
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
   const addProps = {
     name: 'avatar',
     action: 'http://localhost:8000/api/upload/single',
@@ -283,8 +307,8 @@ function News() {
   };
   const BtnModalUpdate = (record) => {
     setIsEditing(true)
-    setIsDataEdit({ ...record, _id: record._id, listImg: [] })
-    console.log(record._id);
+    setIsDataEdit({ ...record, _id: record._id })
+    console.log(record);
   }
 
   const BtnDelete = async (record) => {
@@ -325,7 +349,7 @@ function News() {
         color: isDataEdit.color,
         size: isDataEdit.size,
         categories: isDataEdit.categories._id,
-        listImg: isDataEdit.listImg?.join(),
+        listImg: isDataEdit.listImg,
         desc: isDataEdit.desc,
       },
       {
@@ -539,9 +563,9 @@ function News() {
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
                           <Card bordered={false} className="criclebox h-full">
-                            <Upload {...addProps}
+                            <Upload {...addProductProps}
                             >
-                              <Button icon={<UploadOutlined />}>Thêm ảnh (Max:1)</Button>
+                              <Button icon={<UploadOutlined />}>Thêm ảnh (Max:5)</Button>
                             </Upload>
                           </Card>
                         </Col>
@@ -599,7 +623,7 @@ function News() {
                   <Row gutter={[24, 0]}>
                     <Col xs={24} sm={24} md={12} lg={12} xl={24} className="mb-24">
                       <Card bordered={false} className="criclebox h-full">
-                        <Input autoFocus placeholder={isDataEdit.name}
+                        <Input placeholder={isDataEdit.title}
                           onChange={e =>
                             setIsDataEdit(pre => {
                               return {
@@ -622,7 +646,7 @@ function News() {
                               },
                             ]}
                           >
-                            <Select style={{ width: "100%", lineHeight: "31px" }} placeholder="Danh mục">
+                            <Select style={{ width: "100%", lineHeight: "31px" }} placeholder={isDataEdit.categories.category_name}>
                               {categoryRef.current.map(item =>
                                 <Option key={item._id} value={item._id}>{item.category_name}</Option>
                               )}

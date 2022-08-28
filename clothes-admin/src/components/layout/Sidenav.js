@@ -118,19 +118,21 @@ function Sidenav({ color }) {
             <span className="label">Thống kê</span>
           </NavLink>
         </Menu.Item>
-        <Menu.Item key="2">
-          <NavLink to="/Sản phẩm">
-            <span
-              className="icon"
-              style={{
-                background: page === "Sản phẩm" ? color : "",
-              }}
-            >
-              <SkinOutlined />
-            </span>
-            <span className="label">Quản lý sản phẩm</span>
-          </NavLink>
-        </Menu.Item>
+        {role === 1 &&
+          <Menu.Item key="2">
+            <NavLink to="/Sản phẩm">
+              <span
+                className="icon"
+                style={{
+                  background: page === "Sản phẩm" ? color : "",
+                }}
+              >
+                <SkinOutlined />
+              </span>
+              <span className="label">Quản lý sản phẩm</span>
+            </NavLink>
+          </Menu.Item>
+        }
         <Menu.Item key="3">
           <NavLink to="/Hóa đơn">
             <span
@@ -144,19 +146,21 @@ function Sidenav({ color }) {
             <span className="label">Hóa đơn</span>
           </NavLink>
         </Menu.Item>
-        <Menu.Item key="4">
-          <NavLink to="/Danh mục">
-            <span
-              className="icon"
-              style={{
-                background: page === "Danh mục" ? color : "",
-              }}
-            >
-              <BranchesOutlined />
-            </span>
-            <span className="label">Quản lý danh mục</span>
-          </NavLink>
-        </Menu.Item>
+        {role === 1 &&
+          <Menu.Item key="4">
+            <NavLink to="/Danh mục">
+              <span
+                className="icon"
+                style={{
+                  background: page === "Danh mục" ? color : "",
+                }}
+              >
+                <BranchesOutlined />
+              </span>
+              <span className="label">Quản lý danh mục</span>
+            </NavLink>
+          </Menu.Item>
+        }
         <Menu.Item key="7">
           <NavLink to="/Bình luận">
             <span
