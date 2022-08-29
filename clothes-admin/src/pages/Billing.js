@@ -33,7 +33,7 @@ function Billing() {
   const [success, setSuccess] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const fetchData = async () => {
-    const response = await axios.get(`${API_URL}/order`, {
+    const response = await axios.get(`${API_URL}/order/admin`, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token_admin')}`
       }
