@@ -58,12 +58,12 @@ const CartPage = () => {
   return (
     <MainLayout>
       <Wrapper>
-        <Title>YOUR BAG</Title>
+        <Title>GIỎ HÀNG CỦA BẠN</Title>
         <Top>
-          <TopButton typeBtn={""}>CONTINUE SHOPPING</TopButton>
+          <TopButton typeBtn={""}>TIẾP TỤC MUA HÀNG</TopButton>
           <TopTexts>
-            <TopText>{`Shopping Bag(${productIncart.length})`}</TopText>
-            <TopText>Your Wishlist (0)</TopText>
+            <TopText>{`Giỏ Hàng (${productIncart.length})`}</TopText>
+          
           </TopTexts>
         </Top>
         <Bottom>
@@ -82,18 +82,18 @@ const CartPage = () => {
             )}
           </Info>
           <Summary>
-            <SummaryTitle>ORDER SUMMARY</SummaryTitle>
+            <SummaryTitle>Hóa Đơn</SummaryTitle>
 
             <SummaryItem type={""}>
-              <SummaryItemText>Estimated Shipping</SummaryItemText>
+              <SummaryItemText>Phí vận chuyển ước tính:</SummaryItemText>
               <SummaryItemPrice>{formatMoney(10000)}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem type={""}>
-              <SummaryItemText>Shipping Discount</SummaryItemText>
+              <SummaryItemText>Giảm giá phí vận chuyển:</SummaryItemText>
               <SummaryItemPrice>{formatMoney(-10000)}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem type="total">
-              <SummaryItemText>Total</SummaryItemText>
+              <SummaryItemText>Tổng Tiền:</SummaryItemText>
               <SummaryItemPrice>
                 {formatMoney(getTotal(productIncart))}
               </SummaryItemPrice>
@@ -103,7 +103,7 @@ const CartPage = () => {
                 style={{ cursor: "pointer" }}
                 disabled={productIncart.length ? false : true}
               >
-                CHECKOUT NOW
+                Đặt Hàng Ngay
               </Button>
             </Link>
           </Summary>

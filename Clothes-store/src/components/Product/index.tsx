@@ -25,7 +25,10 @@ const Product = ({ item }: any) => {
         </Icon> */}
         <div className="info__container">
           <div className="info--title">{item.title}</div>
-          <div className="info--desc">{item.desc}</div>
+          <div
+            dangerouslySetInnerHTML={{ __html: item ? item.desc : "" }}
+            className="info--desc"
+          />
           <div className="info--detail">
             <div className="detail--price">Giá:{formatMoney(item.price)}</div>
             <div className="detail--quantity">

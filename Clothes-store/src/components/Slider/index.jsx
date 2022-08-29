@@ -4,6 +4,10 @@ import AwesomeSlider from "react-awesome-slider";
 import withAutoplay from "react-awesome-slider/dist/autoplay";
 import "react-awesome-slider/dist/styles.css";
 import zIndex from "@mui/material/styles/zIndex";
+import img1 from "../../assets/slider/slider1.jpg";
+import img2 from "../../assets/slider/slider3.jpg";
+import img3 from "../../assets/slider/slider2.jpg";
+
 
 const Slider = () => {
   const AutoplaySlider = withAutoplay(AwesomeSlider);
@@ -31,8 +35,9 @@ const Slider = () => {
             hello ae
           </div>
         </div>
-        <div data-src={"https://i.imgur.com/iDgOvpX.jpeg"} />
-        <div data-src={"https://i.imgur.com/aPFpQIM.jpeg"} />
+        <div data-src={img1} />
+        {/* <div data-src={img2} /> */}
+        <div data-src={img3} />
       </AutoplaySlider>
     </SliderWrapper>
   );

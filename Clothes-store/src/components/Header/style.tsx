@@ -5,7 +5,7 @@ export const HeaderWrapper = styled.div<{ visible: boolean }>`
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
   position: ${(props) => (props.visible ? "sticky" : "relative")};
   top: 0;
-  z-index: ${(props) => (props.visible ? "999" : "0")};
+  z-index: ${(props) => (props.visible ? "999" : "99")};
   background: #fff;
   .header__container {
     padding: ${(props) => (!props.visible ? "0.5rem 4rem" : "0rem 4rem")};
@@ -82,7 +82,7 @@ export const Center = styled.div`
     .navbar__submenu {
       background: teal;
       position: absolute;
-      z-index: 9;
+      z-index: 9999;
       top: 103%;
       right: 56%;
       display: flex;
@@ -136,7 +136,7 @@ export const MenuItem = styled.div<{ isOpen?: Boolean }>`
   .user__menu {
     background: teal;
     position: absolute;
-    z-index: 9;
+    z-index: 9999;
     right: -1rem;
     top: 2.5rem;
     color: #fff;

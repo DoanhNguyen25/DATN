@@ -39,7 +39,7 @@ router.post("/api/create-order", auth.verifyToken, async (req, res) => {
 });
 
 // GET ORDER
-router.get("/api/order", auth.verifyToken, async (req, res) => {
+router.get("/api/order/user", auth.verifyToken, async (req, res) => {
   try {
     const order = await Order.find({ userId: req.user._id });
     if (order) {
@@ -47,6 +47,16 @@ router.get("/api/order", auth.verifyToken, async (req, res) => {
     } else {
       res.status(404).send({ message: "không tồn tại đơn hàng!!" });
     }
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
+
+// Get All Order
+router.get("/api/order/admin", auth.verifyToken, async (req, res) => {
+  try {
+    const order = await Order.find({});
+    res.status(200).send(order);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }

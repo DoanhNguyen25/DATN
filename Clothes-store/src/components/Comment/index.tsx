@@ -27,9 +27,20 @@ const Comment = ({ comment }: any) => {
           onChange={(e: any) => setValue(e.target.value)}
         ></textarea>
         <br />
-        <button onClick={handleComment}>Bình luận</button>
+        <button
+          onClick={handleComment}
+          style={{
+            border: "none",
+            outline: "none",
+            padding: "1rem 2rem",
+            background: "teal",
+            color: "#fff",
+          }}
+        >
+          Bình luận
+        </button>
 
-        <div>
+        <div style={{ marginTop: "1rem" }}>
           {
             a.comments.filter((comment: any) => comment.product === productId)
               ?.length

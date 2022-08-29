@@ -646,9 +646,9 @@ function News() {
                               },
                             ]}
                           >
-                            <Select style={{ width: "100%", lineHeight: "31px" }} placeholder={isDataEdit.categories.category_name}>
+                            <Select style={{ width: "100%", lineHeight: "31px" }} placeholder={isDataEdit.categories?.category_name}>
                               {categoryRef.current.map(item =>
-                                <Option key={item._id} value={item._id}>{item.category_name}</Option>
+                                <Option key={item._id} value={item._id}>{item?.category_name}</Option>
                               )}
                             </Select>
                           </Form.Item>

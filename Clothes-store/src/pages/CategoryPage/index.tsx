@@ -56,13 +56,13 @@ const CategoryPage = () => {
   return (
     <MainLayout>
       <CategoryPageWrapper>
-        <Title>Dress</Title>
+        <Title>Áo mùa đông</Title>
         <FilterContainer>
           <Filter>
-            <FilterText>Filter Products:</FilterText>
+            <FilterText>Lọc Sản phẩm:</FilterText>
             <Select onChange={(e) => setColor(e.target.value.toLowerCase())}>
               <Option disabled selected>
-                Color
+                Màu sắc
               </Option>
               <Option>White</Option>
               <Option>Black</Option>
@@ -71,19 +71,9 @@ const CategoryPage = () => {
               <Option>Yellow</Option>
               <Option>Green</Option>
             </Select>
-            <Select>
-              <Option disabled selected>
-                Size
-              </Option>
-              <Option>XS</Option>
-              <Option>S</Option>
-              <Option>M</Option>
-              <Option>L</Option>
-              <Option>XL</Option>
-            </Select>
           </Filter>
           <Filter>
-            <FilterText>Sort Products:</FilterText>
+            <FilterText>Sắp xếp sản phẩm:</FilterText>
             <Select onChange={(e) => setSort(e.target.value.toLowerCase())}>
               <Option selected>Newest</Option>
               <Option>Price asc</Option>
@@ -127,7 +117,7 @@ const CategoryPage = () => {
             className="load__more--btn"
             onClick={() => setSize((pre) => pre + 3)}
           >
-            Load more
+            Xem thêm
           </div>
         </div>
 
