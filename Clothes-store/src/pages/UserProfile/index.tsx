@@ -45,7 +45,7 @@ const UserProfile = () => {
   useEffect(() => {
     const getUserInfo = async () => {
       try {
-        const req = await GetUserInfo("http://localhost:8000/api/user-profile");
+        const req = await GetUserInfo("http://18.138.254.179:8000/api/user-profile");
         if (req.data) {
           formik.setValues({
             fullname: req.data.fullname,

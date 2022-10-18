@@ -45,7 +45,7 @@ const OrderHistory = () => {
 
   const getOrder = async () => {
     try {
-      const req = await GetOrder("http://localhost:8000/api/order");
+      const req = await GetOrder("http://18.138.254.179:8000/api/order");
       if (req.data) {
         setOrders(req.data);
       }

@@ -116,7 +116,7 @@ const ProductPage = () => {
   useEffect(() => {
     window.scroll(0, 0);
     const getData = async () => {
-      const req = await axios.get(`http://localhost:8000/api/product/${id}`);
+      const req = await axios.get(`http://18.138.254.179:8000/api/product/${id}`);
       if (req.data) {
         setProduct(req.data);
         setImg(req.data.listImg[0]);

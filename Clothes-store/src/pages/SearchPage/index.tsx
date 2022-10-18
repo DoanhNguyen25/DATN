@@ -18,7 +18,7 @@ const SearchPage = () => {
     const getProduct = async () => {
       try {
         const req = await GetProductBySearch(
-          `http://localhost:8000/api/products?keySearch=${keySearch}`
+          `http://18.138.254.179:8000/api/products?keySearch=${keySearch}`
         );
         if (req.data) {
           setIsLoading(false);

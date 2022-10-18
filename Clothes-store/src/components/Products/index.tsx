@@ -10,7 +10,7 @@ const Products = () => {
     try {
       const getListProduct = async () => {
         const res = await GetPoduct(
-          "http://localhost:8000/api/products?size=3"
+          "http://18.138.254.179:8000/api/products?size=3"
         );
         if (res.data) {
           setProducts(res.data.products);
