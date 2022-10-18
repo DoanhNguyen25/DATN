@@ -71,7 +71,7 @@ const OrderPage = () => {
   const createOrder = async () => {
     try {
       const req = await CreateOrder(
-        "http://localhost:8000/api/create-order",
+        "http://18.138.254.179:8000/api/create-order",
         formik.values
       );
 

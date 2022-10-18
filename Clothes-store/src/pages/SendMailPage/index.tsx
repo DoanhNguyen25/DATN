@@ -26,7 +26,7 @@ const LoginPage = () => {
   const handleSendMail = async () => {
     try {
       const req = await SendMail(
-        "http://localhost:8000/api/reset-password",
+        "http://18.138.254.179:8000/api/reset-password",
         formik.values.email
       );
       if (req.data) {

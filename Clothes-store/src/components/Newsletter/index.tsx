@@ -9,7 +9,7 @@ const Newsletter = () => {
   const [email, setEmail] = useState<string>("");
   const handleSendMail = async () => {
     try {
-      const req = await SendMail("http://localhost:8000/api/sendmail", email);
+      const req = await SendMail("http://18.138.254.179:8000/api/sendmail", email);
       if (req.data) {
         toast.success("gửi mail thành công!");
       }

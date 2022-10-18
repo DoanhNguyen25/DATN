@@ -21,7 +21,7 @@ export const login =
         type: USER_LOGIN_REQUEST,
       });
 
-      const req = await LoginData("http://localhost:8000/api/login", {
+      const req = await LoginData("http://18.138.254.179:8000/api/login", {
         username: username,
         password: password,
       });
@@ -75,7 +75,7 @@ export const register =
       dispath({
         type: USER_REGISTER_REQUEST,
       });
-      const req = await RegisterData("http://localhost:8000/api/register", {
+      const req = await RegisterData("http://18.138.254.179:8000/api/register", {
         email: email,
         fullname: fullname,
         username: username,

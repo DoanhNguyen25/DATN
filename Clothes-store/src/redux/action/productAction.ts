@@ -17,7 +17,7 @@ export const commentProduct =
         type: ADD_COMMENT_REQUEST,
       });
       const req = await CommentProduct(
-        `http://localhost:8000/api/comment/${productId}`,
+        `http://18.138.254.179:8000/${productId}`,
         comment
       );
       if (req.data) {
@@ -39,7 +39,7 @@ export const commentProduct =
 
 export const getComment = () => async (dispatch: Dispatch<CommentAction>) => {
   try {
-    const req = await GetComment("http://localhost:8000/api/comments");
+    const req = await GetComment("http://18.138.254.179:8000/api/comments");
     if (req.data) {
       dispatch({
         type: GET_COMMENT,

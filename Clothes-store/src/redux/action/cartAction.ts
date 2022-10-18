@@ -25,7 +25,7 @@ export const addToCart =
         dispatch({
           type: ADD_CART__REQUEST,
         });
-        const req = await AddToCart("http://localhost:8000/api/add_to_cart", {
+        const req = await AddToCart("http://18.138.254.179:8000/api/add_to_cart", {
           productId: productId,
           color: color,
           size: size,
@@ -47,7 +47,7 @@ export const addToCart =
 
 export const getCart = () => async (dispath: Dispatch<CartAction>) => {
   try {
-    const req = await GetCart("http://localhost:8000/api/cart");
+    const req = await GetCart("http://18.138.254.179:8000/api/cart");
     if (req.data) {
       dispath({
         type: GET_CART_DETAIL,
@@ -63,7 +63,7 @@ export const updateCart =
   (productId: string, type: string) =>
     async (dispatch: Dispatch<CartAction>) => {
       try {
-        const req = await UpdateCart("http://localhost:8000/api/cart/update", {
+        const req = await UpdateCart("http://18.138.254.179:8000/api/cart/update", {
           productId: productId,
           type: type,
         });
@@ -82,7 +82,7 @@ export const deleteItemInCart =
   (productId: string) => async (dispatch: Dispatch<CartAction>) => {
     try {
       const req = await DeleteItem(
-        `http://localhost:8000/api/remove/${productId}`
+        `http://18.138.254.179:8000/api/remove/${productId}`
       );
       if (req.data) {
         dispatch({
@@ -97,7 +97,7 @@ export const deleteItemInCart =
   };
 
 export const removeAllItems = () => async (dispath: Dispatch<CartAction>) => {
-  const req = await DeleteAllItems("http://localhost:8000/api/removeAll");
+  const req = await DeleteAllItems("http://18.138.254.179:8000/api/removeAll");
   if (req.data) {
     dispath({
       type: REMOVE_ALL_ITEM,

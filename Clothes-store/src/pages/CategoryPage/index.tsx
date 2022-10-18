@@ -39,7 +39,7 @@ const CategoryPage = () => {
   const getProduct = async () => {
     try {
       const req = await GetProductByCategory(
-        `http://localhost:8000/api/product2/${id}?page=${page}&size=${size}&sort=${sort}&color=${color}`
+        `http://18.138.254.179:8000/api/product2/${id}?page=${page}&size=${size}&sort=${sort}&color=${color}`
       );
 
       if (req.data) {

@@ -53,7 +53,7 @@ const ResetPasswordPage = () => {
   const editUser = async (data: any) => {
     try {
       const req = await EditUser(
-        `http://localhost:8000/api/user/${userId}`,
+        `http://18.138.254.179:8000/api/user/${userId}`,
         data
       );
       if (req.data) {

@@ -134,7 +134,7 @@ const UserProfile = () => {
   const editUser = async (data: any) => {
     try {
       const req = await EditUser(
-        `http://localhost:8000/api/user/${userInfo?._id}`,
+        `http://18.138.254.179:8000/api/user/${userInfo?._id}`,
         data
       );
       if (req.data) {
@@ -155,7 +155,7 @@ const UserProfile = () => {
     formData.append("upload_preset", "xw4yrog1");
     try {
       const req = await axios.post(
-        "http://localhost:8000/api/upload/single",
+        "http://18.138.254.179:8000/api/upload/single",
         formData
       );
       if (req.data) {
@@ -167,38 +167,6 @@ const UserProfile = () => {
   };
 
   return (
-    // <div>
-    //   demo upload
-    //   <form onSubmit={handleSubmit}>
-    //     <input
-    //       type="text"
-    //       value={username}
-    //       onChange={(e) => setUserName(e.target.value)}
-    //     />
-
-    //     <input
-    //       type="file"
-    //       id="listImage"
-    //       name="listImage"
-    //       accept="image/png, image/jpeg,image/jpg"
-    //       onChange={changeHandler}
-    //       multiple
-    //     />
-    //     {images.length > 0 ? (
-    //       <div style={{ display: "flex" }}>
-    //         {images.map((image: any, idx: number) => {
-    //           return (
-    //             <p key={idx}>
-    //               {" "}
-    //               <img src={image} alt="" />{" "}
-    //             </p>
-    //           );
-    //         })}
-    //       </div>
-    //     ) : null}
-    //     <button type="submit">Submit</button>
-    //   </form>
-    // </div>
     <MainLayout>
       <UserProfileWrapper>
         <div className="profile__container">
