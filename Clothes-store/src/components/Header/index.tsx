@@ -77,7 +77,7 @@ const Header = () => {
     dispatch(getCart());
     const getCategory = async () => {
       try {
-        const req = await axios.get("http://localhost:8000/api/categories");
+        const req = await axios.get("http://18.138.254.179:8000/api/categories");
         if (req.data) {
           setCategories(req.data);
         }

@@ -21,7 +21,7 @@ const StripePayment = (props: IProps) => {
   useEffect(() => {
     const makeRequest = async () => {
       try {
-        const res = await axios.post("http://localhost:8000/api/payment", {
+        const res = await axios.post("http://18.138.254.179:8000/api/payment", {
           tokenId: stripeToken.id,
           amount: props.amount,
         });
